@@ -1,5 +1,6 @@
 
 using Serilog;
+using Serilog.Formatting.Json;
 
 namespace ToDoManager
 {
@@ -21,16 +22,20 @@ namespace ToDoManager
 
             var app = builder.Build();
 
-            app.UseSerilogRequestLogging();
-
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            else
+            {
+                app.UseHsts();
+            }
 
             app.UseHttpsRedirection();
+
+            app.UseSerilogRequestLogging();
 
             app.UseAuthorization();
 

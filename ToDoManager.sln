@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoManager", "ToDoManager\ToDoManager.csproj", "{D7968A2A-3D18-459B-A594-17953DA95486}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoManager", "ToDoManager\ToDoManager.csproj", "{D7968A2A-3D18-459B-A594-17953DA95486}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{F1857925-385A-497C-97C1-36FEBA6F92DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{54C7BA13-147B-4C34-B4DB-85D65FBA3BDE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,16 @@ Global
 		{D7968A2A-3D18-459B-A594-17953DA95486}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7968A2A-3D18-459B-A594-17953DA95486}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7968A2A-3D18-459B-A594-17953DA95486}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54C7BA13-147B-4C34-B4DB-85D65FBA3BDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54C7BA13-147B-4C34-B4DB-85D65FBA3BDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54C7BA13-147B-4C34-B4DB-85D65FBA3BDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54C7BA13-147B-4C34-B4DB-85D65FBA3BDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{54C7BA13-147B-4C34-B4DB-85D65FBA3BDE} = {F1857925-385A-497C-97C1-36FEBA6F92DD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7AA0EBC6-CE1F-4DA0-8DA1-E76E09088D99}

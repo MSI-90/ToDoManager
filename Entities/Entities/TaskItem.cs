@@ -23,6 +23,14 @@ public class TaskItem
     [Column("priority")]
     public Priority PriorityTask { get; set; }
 
+    [Column("creation_date")]
+    [Required]
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+    [Column("expiration_date")]
+    [Required]
+    public DateTime ExpirationDate { get; set; }
+
     [Column("category_id")]
     [ForeignKey(nameof(Category))]
     public Guid CategoryId { get; set; }

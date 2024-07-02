@@ -1,6 +1,6 @@
 
 using Serilog;
-using Serilog.Formatting.Json;
+using ToDoManager.Extensions;
 
 namespace ToDoManager
 {
@@ -14,7 +14,7 @@ namespace ToDoManager
                 loggerConfig.ReadFrom.Configuration(context.Configuration));
 
             // Add services to the container.
-
+            builder.Services.ConfigurePostgresConnection(builder.Configuration);
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

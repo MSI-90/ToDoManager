@@ -17,10 +17,6 @@ public class RepositoryContext : IdentityDbContext<User>
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.ApplyConfiguration(new TaskItemConfiguration());
-        modelBuilder.ApplyConfiguration(new CategoryConfiguration());
-        modelBuilder.ApplyConfiguration(new UserConfiguration());
-        modelBuilder.ApplyConfiguration(new IdentityRoleConfiguration());
-        modelBuilder.ApplyConfiguration(new IdentityUserRoleConfiguration());
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(RepositoryContext).Assembly);
     }
 }

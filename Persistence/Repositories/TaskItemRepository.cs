@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Persistence.Repositories;
@@ -7,15 +8,8 @@ namespace Persistence.Repositories;
 public class TaskItemRepository : ITaskItemRepository
 {
     private readonly RepositoryContext _repositoryContext;
-    private readonly ILogger _logger;
-    public TaskItemRepository(RepositoryContext repositoryContext, ILogger logger)
-    {
-        _repositoryContext = repositoryContext;
-        _logger = logger;
-    }
+    public TaskItemRepository(RepositoryContext repositoryContext, ILogger logger) =>  _repositoryContext = repositoryContext;
 
-    public Task<IQueryable<TaskItem>> GetTasksAsync()
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<IEnumerable<TaskItem>> GetTasksAsync() => 
+        await _repositoryContext.TaskItems.ToListAsync();
 }

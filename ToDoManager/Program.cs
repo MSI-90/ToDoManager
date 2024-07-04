@@ -17,6 +17,7 @@ namespace ToDoManager
             builder.Services.ConfigurePostgresConnection(builder.Configuration);
             builder.Services.AddControllers()
                 .AddApplicationPart(typeof(ToDoManager.Presentation.AssemblyReference).Assembly);
+            builder.Services.AddAutoMapper(typeof(Program));
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

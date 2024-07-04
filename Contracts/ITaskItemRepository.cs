@@ -4,5 +4,5 @@ namespace Contracts;
 
 public interface ITaskItemRepository
 {
-    Task<IQueryable<TaskItem>> GetTasksAsync();
+    Task<IEnumerable<TaskItem>> GetTasksAsync();
 }

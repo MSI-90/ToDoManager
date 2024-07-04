@@ -1,5 +1,5 @@
 ﻿using Contracts;
-using Entities.Models;
+using Entities;
 using Microsoft.Extensions.Logging;
 
 namespace Persistence.Repositories;
@@ -14,7 +14,7 @@ public class TaskItemRepository : ITaskItemRepository
         _logger = logger;
     }
 
-    public Task<TaskItem> GetTasksAsync()
+    public Task<IQueryable<TaskItem>> GetTasksAsync()
     {
         throw new NotImplementedException();
     }

@@ -1,10 +1,12 @@
-﻿using Entities.Models;
+﻿using Domain.Entities;
+using Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Configurations;
 
 namespace Persistence;
 
-public class RepositoryContext : DbContext
+public class RepositoryContext : IdentityDbContext<User>
 {
     public DbSet<TaskItem> TaskItems { get; set; }
     public DbSet<Category> Categories { get; set; }
@@ -17,5 +19,8 @@ public class RepositoryContext : DbContext
 
         modelBuilder.ApplyConfiguration(new TaskItemConfiguration());
         modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new IdentityRoleConfiguration());
+        modelBuilder.ApplyConfiguration(new IdentityUserRoleConfiguration());
     }
 }

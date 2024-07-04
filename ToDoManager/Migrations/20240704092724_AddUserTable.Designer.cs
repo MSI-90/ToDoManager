@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Persistence;
@@ -11,9 +12,11 @@ using Persistence;
 namespace ToDoManager.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20240704092724_AddUserTable")]
+    partial class AddUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,6 +32,9 @@ namespace ToDoManager.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
+
+                    b.Property<Guid?>("CategoryId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -88,6 +94,8 @@ namespace ToDoManager.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -96,21 +104,6 @@ namespace ToDoManager.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1ffabf88-601d-4840-ad89-1d50683d87c1",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "63bf5f68-6a76-440f-8762-7add7049822a",
-                            EmailConfirmed = false,
-                            FirstName = "TestUserName",
-                            LastName = "TestUserSername",
-                            LockoutEnabled = false,
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "0c251269-9e13-4a73-a14b-2c368827e7a2",
-                            TwoFactorEnabled = false
-                        });
                 });
 
             modelBuilder.Entity("Entities.Category", b =>
@@ -193,7 +186,7 @@ namespace ToDoManager.Migrations
                         {
                             Id = new Guid("60abbca8-664d-4b20-b5de-024705497d4a"),
                             CategoryId = new Guid("c3d4c014-49b6-410c-bc78-1d54a9991870"),
-                            CreatedAt = new DateTime(2024, 7, 4, 11, 12, 26, 343, DateTimeKind.Utc).AddTicks(3063),
+                            CreatedAt = new DateTime(2024, 7, 4, 9, 27, 22, 148, DateTimeKind.Utc).AddTicks(3051),
                             Description = "Пить кофе весело, пить кофе хорошо)",
                             ExpirationDate = new DateTime(2024, 7, 6, 23, 34, 42, 361, DateTimeKind.Utc),
                             PriorityTask = (byte)1,
@@ -226,14 +219,6 @@ namespace ToDoManager.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "fcd854e5-2c91-49be-9f8a-db4bc0d95b28",
-                            Name = "TestRole",
-                            NormalizedName = "TESTROLE"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -321,13 +306,6 @@ namespace ToDoManager.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "1ffabf88-601d-4840-ad89-1d50683d87c1",
-                            RoleId = "fcd854e5-2c91-49be-9f8a-db4bc0d95b28"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -362,6 +340,13 @@ namespace ToDoManager.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("TaskItemUser");
+                });
+
+            modelBuilder.Entity("Domain.Entities.User", b =>
+                {
+                    b.HasOne("Entities.Category", null)
+                        .WithMany("Users")
+                        .HasForeignKey("CategoryId");
                 });
 
             modelBuilder.Entity("Entities.TaskItem", b =>
@@ -444,6 +429,8 @@ namespace ToDoManager.Migrations
             modelBuilder.Entity("Entities.Category", b =>
                 {
                     b.Navigation("Tasks");
+
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

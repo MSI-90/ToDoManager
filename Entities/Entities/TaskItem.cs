@@ -1,8 +1,9 @@
-﻿using Entities.Enums;
+﻿using Domain.Entities;
+using Entities.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Entities.Models;
+namespace Entities;
 
 [Table("tasks")]
 public class TaskItem
@@ -35,4 +36,9 @@ public class TaskItem
     [ForeignKey(nameof(Category))]
     public Guid CategoryId { get; set; }
     public Category? Category { get; set; }
+
+    [Column("user_id")]
+    [ForeignKey(nameof(User))]
+    public Guid UserId { get; set; }
+    public ICollection<User> User { get; set; } = null!;
 }

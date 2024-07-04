@@ -1,8 +1,8 @@
-﻿using Entities.Models;
+﻿using Entities;
 
 namespace Contracts;
 
 public interface ITaskItemRepository
 {
-    Task<TaskItem> GetTasksAsync();
+    Task<IQueryable<TaskItem>> GetTasksAsync();
 }

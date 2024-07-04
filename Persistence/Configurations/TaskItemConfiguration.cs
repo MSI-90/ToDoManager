@@ -1,5 +1,5 @@
-﻿using Entities.Enums;
-using Entities.Models;
+﻿using Entities;
+using Entities.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

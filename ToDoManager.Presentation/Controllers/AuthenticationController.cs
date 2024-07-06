@@ -5,7 +5,9 @@ using Shared.DataTransferObjects;
 using ToDoManager.Presentation.ActionFilters;
 
 namespace ToDoManager.Presentation.Controllers;
-
+/// <summary>
+/// Authentication controller
+/// </summary>
 [Route("api/authentication")]
 [ApiController]
 public class AuthenticationController : ControllerBase
@@ -18,11 +20,17 @@ public class AuthenticationController : ControllerBase
         _logger = logger;
     }
 
+    /// <summary>
+    /// Registration new user
+    /// </summary>
+    /// <param name="userForRegistrationDto"></param>
+    /// <returns>Create new user</returns>
     [HttpPost]
+    [ProducesResponseType(201)]
+    [ProducesResponseType(404)]
     [ServiceFilter(typeof(ValidationFilter))]
     public async Task<IActionResult> Registration([FromBody] UserForRegistrationDto userForRegistrationDto)
     {
-        _logger.LogError("GRKJLNGNTRNITNIT");
         var result = await _authenticationService.UserRegistrationAsync(userForRegistrationDto);
         if (!result.Succeeded)
         {
@@ -34,5 +42,22 @@ public class AuthenticationController : ControllerBase
         }
 
         return StatusCode(201);
+    }
+
+    /// <summary>
+    /// Authentication user
+    /// </summary>
+    /// <param name="userForAuthetication"></param>
+    /// <returns>Bearer token</returns>
+    [HttpPost]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(403)]
+    [ServiceFilter(typeof(ValidationFilter))]
+    public async Task<IActionResult> Authentication([FromBody] UserForAutheticationDto userForAuthetication)
+    {
+        if(!await _authenticationService.ValidUserAsync(userForAuthetication))
+            return Unauthorized();
+
+
     }
 }

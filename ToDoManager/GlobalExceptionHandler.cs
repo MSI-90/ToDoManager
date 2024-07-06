@@ -1,8 +1,7 @@
 ﻿using Domain;
 using Domain.ErrorModel;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
-using System.Security.Authentication;
 
 namespace ToDoManager;
 
@@ -19,11 +18,13 @@ public class GlobalExceptionHandler : IExceptionHandler
         {
             switch (contextFeature.Error)
             {
-                case AuthenticationException:
+                case AuthenticationUserException:
                     httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
                     _logger.LogError(Messages.regError);
                     break;
-
+                case NotFoundException:
+                    httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                    break;
             }
 
             await httpContext.Response.WriteAsync(new ErrorDetails()

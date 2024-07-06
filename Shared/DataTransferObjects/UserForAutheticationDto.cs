@@ -5,7 +5,7 @@ namespace Shared.DataTransferObjects;
 public record UserForAutheticationDto
 {
     [Required(ErrorMessage = "E-mail обязателен")]
-    [EmailAddress]
+    [EmailAddress(ErrorMessage = "Проверьте корректность ввода e-mail адреса")]
     [StringLength(50, ErrorMessage = "Максимальная длина для e-mail 50 символов")]
     public string Email {  get; init; } = string.Empty;
 

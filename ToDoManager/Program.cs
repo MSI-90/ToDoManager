@@ -10,17 +10,20 @@ namespace ToDoManager
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Host.UseSerilog((context, loggerConfig) =>
+            var logger = builder.Host.UseSerilog((context, loggerConfig) =>
                 loggerConfig.ReadFrom.Configuration(context.Configuration));
 
             // Add services to the container.
             builder.Services.ConfigurePostgresConnection(builder.Configuration);
-            builder.Services.AddControllers()
-                .AddApplicationPart(typeof(ToDoManager.Presentation.AssemblyReference).Assembly);
+            builder.Services.ConfigureRepositoryManager();
+            builder.Services.ConfigureServices();
+            builder.Services.ConfigureIdentity();
             builder.Services.AddAutoMapper(typeof(Program));
 
+            builder.Services.AddControllers()
+                .AddApplicationPart(typeof(ToDoManager.Presentation.AssemblyReference).Assembly);
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
@@ -39,6 +42,8 @@ namespace ToDoManager
             app.UseHttpsRedirection();
 
             app.UseSerilogRequestLogging();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

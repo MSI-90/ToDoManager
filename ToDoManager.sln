@@ -15,13 +15,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Persistence\Persistence.csproj", "{0625CA34-46FA-4C96-B940-94ED880F6FE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoManager.Presentation", "ToDoManager.Presentation\ToDoManager.Presentation.csproj", "{68FC5A8C-5780-4DC7-9C07-F57360866AF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoManager.Presentation", "ToDoManager.Presentation\ToDoManager.Presentation.csproj", "{68FC5A8C-5780-4DC7-9C07-F57360866AF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{F5A5507F-93F8-4E46-8071-5C39D9F7A039}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{F5A5507F-93F8-4E46-8071-5C39D9F7A039}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Contracts", "Service.Contracts\Service.Contracts.csproj", "{B8A8DBEF-4AFD-49CB-B604-863ED0BD16E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Contracts", "Service.Contracts\Service.Contracts.csproj", "{B8A8DBEF-4AFD-49CB-B604-863ED0BD16E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{EE14842C-1A81-482D-8174-539748243D5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{EE14842C-1A81-482D-8174-539748243D5C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

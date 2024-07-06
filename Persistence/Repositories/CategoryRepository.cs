@@ -5,11 +5,9 @@ namespace Persistence.Repositories;
 
 public class CategoryRepository : ICategoryRepository
 {
-    private readonly ILogger _logger;
     private readonly RepositoryContext _repositoryContext;
-    public CategoryRepository(RepositoryContext repositoryContext, ILogger logger)
+    public CategoryRepository(RepositoryContext repositoryContext)
     {
-        _logger = logger;
         _repositoryContext = repositoryContext;
     }
 }

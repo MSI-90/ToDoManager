@@ -5,16 +5,14 @@ namespace Persistence.Repositories;
 
 public class RepositoryManager : IRepositoryManager
 {
-    private readonly ILogger _logger;
     private readonly RepositoryContext _context;
     private readonly Lazy<ITaskItemRepository> _taskRepository;
     private readonly Lazy<ICategoryRepository> _categoryRepository;
-    public RepositoryManager(RepositoryContext context, ILogger logger)
+    public RepositoryManager(RepositoryContext context)
     {
-        _logger = logger;
         _context = context;
-        _taskRepository = new Lazy<ITaskItemRepository>(() => new TaskItemRepository(_context, logger));
-        _categoryRepository = new Lazy<ICategoryRepository>(() => new CategoryRepository(_context, logger));
+        _taskRepository = new Lazy<ITaskItemRepository>(() => new TaskItemRepository(_context));
+        _categoryRepository = new Lazy<ICategoryRepository>(() => new CategoryRepository(_context));
     }
     public ICategoryRepository CategoryRepository => _categoryRepository.Value;
     public ITaskItemRepository TaskItemRepository => _taskRepository.Value;

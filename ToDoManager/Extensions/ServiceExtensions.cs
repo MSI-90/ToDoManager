@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.Repositories;
-using Serilog;
 using Service;
 using Service.Contracts;
+using ToDoManager.Presentation.ActionFilters;
 
 namespace ToDoManager.Extensions;
 
@@ -22,6 +22,10 @@ public static class ServiceExtensions
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<ITaskItemService, TaskItemService>();
         services.AddScoped<ICategoryService, CategoryService>();
+    }
+    public static void ConfigureActionFilters(this IServiceCollection services)
+    {
+        services.AddScoped<ValidationFilter>();
     }
     public static void ConfigureIdentity(this IServiceCollection services)
     {

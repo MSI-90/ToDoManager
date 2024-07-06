@@ -4,16 +4,16 @@ namespace Shared.DataTransferObjects;
 
 public record UserForRegistrationDto
 {
-    [Required]
+    [Required(ErrorMessage = "Имя пользователя обязательно")]
     [StringLength(50)]
     public string FirstName { get; init; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "Фамилия обязательна")]
     [StringLength(50)]
     public string LastName { get; init; } = string.Empty;
 
     [Required(ErrorMessage = "E-mail обязателен.")]
-    [EmailAddress]
+    [EmailAddress(ErrorMessage = "Проверьте корректность ввода e-mail адреса")]
     [StringLength(50, ErrorMessage = "Максимальная длина для e-mail 50 символов")]
     public string Email { get; init; } = string.Empty;
 

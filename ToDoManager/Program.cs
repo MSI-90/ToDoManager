@@ -1,4 +1,5 @@
 
+using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using ToDoManager.Extensions;
 
@@ -17,8 +18,15 @@ namespace ToDoManager
             builder.Services.ConfigurePostgresConnection(builder.Configuration);
             builder.Services.ConfigureRepositoryManager();
             builder.Services.ConfigureServices();
+            builder.Services.ConfigureActionFilters();
             builder.Services.ConfigureIdentity();
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddAutoMapper(typeof(Program));
+
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
 
             builder.Services.AddControllers()
                 .AddApplicationPart(typeof(ToDoManager.Presentation.AssemblyReference).Assembly);
@@ -40,6 +48,8 @@ namespace ToDoManager
             }
 
             app.UseHttpsRedirection();
+
+            app.UseExceptionHandler(opt => { });
 
             app.UseSerilogRequestLogging();
 

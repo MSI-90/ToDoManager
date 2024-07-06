@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using ToDoManager.Presentation.ActionFilters;
 
 namespace ToDoManager.Presentation.Controllers;
 
@@ -9,14 +11,18 @@ namespace ToDoManager.Presentation.Controllers;
 public class AuthenticationController : ControllerBase
 {
     private readonly IAuthenticationService _authenticationService;
-    public AuthenticationController(IAuthenticationService authenticationService)
+    private readonly ILogger<AuthenticationController> _logger;
+    public AuthenticationController(IAuthenticationService authenticationService, ILogger<AuthenticationController> logger)
     {
         _authenticationService = authenticationService;
+        _logger = logger;
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(ValidationFilter))]
     public async Task<IActionResult> Registration([FromBody] UserForRegistrationDto userForRegistrationDto)
     {
+        _logger.LogError("GRKJLNGNTRNITNIT");
         var result = await _authenticationService.UserRegistrationAsync(userForRegistrationDto);
         if (!result.Succeeded)
         {
@@ -24,6 +30,7 @@ public class AuthenticationController : ControllerBase
             {
                 ModelState.TryAddModelError(error.Code, error.Description);
             }
+            return BadRequest(ModelState);
         }
 
         return StatusCode(201);

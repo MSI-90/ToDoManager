@@ -1,8 +1,8 @@
 ﻿namespace Domain.Exceptions;
 
-internal sealed class AuthenticationException : Exception
+public abstract class AuthenticationException : Exception
 {
-    public AuthenticationException(string message) : base(message)
+    protected AuthenticationException(string message) : base(message)
     {
     }
 }

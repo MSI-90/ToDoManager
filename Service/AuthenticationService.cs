@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using Domain;
 using Domain.Entities;
 using Domain.Enums;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Service.Contracts;
 using Shared.DataTransferObjects;
-using System.Security.Authentication;
 
 namespace Service;
 
@@ -25,12 +26,10 @@ public sealed class AuthenticationService : IAuthenticationService
         var user = _mapper.Map<User>(userForRegistration);
         var result = await _userManager.CreateAsync(user, userForRegistration.PasswordInput);
         if (!result.Succeeded)
-        { 
-            throw new AuthenticationException("Ошибка на этапе регистрации пользователя");
-        }
-        else 
-            if (!await _userRoles.RoleExistsAsync(UserRoles.User.ToString()))
-                await _userManager.AddToRoleAsync(user, UserRoles.User.ToString());
+            throw new RegistrationProblemException(Messages.regError);
+
+        if (await _userRoles.RoleExistsAsync(UserRoles.User.ToString()))
+            await _userManager.AddToRoleAsync(user, UserRoles.User.ToString());
 
         return result;
     }

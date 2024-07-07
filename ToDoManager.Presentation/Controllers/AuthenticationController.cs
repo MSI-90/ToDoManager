@@ -27,6 +27,7 @@ public class AuthenticationController : ControllerBase
     /// <returns>Create new user</returns>
     [HttpPost]
     [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(404)]
     [ServiceFilter(typeof(ValidationFilter))]
     public async Task<IActionResult> Registration([FromBody] UserForRegistrationDto userForRegistrationDto)
@@ -48,16 +49,21 @@ public class AuthenticationController : ControllerBase
     /// Authentication user
     /// </summary>
     /// <param name="userForAuthetication"></param>
-    /// <returns>Bearer token</returns>
-    [HttpPost]
+    /// <returns>JWT Bearer access and refresh tokens</returns>
+    [HttpPost("login")]
     [ProducesResponseType(200)]
-    [ProducesResponseType(403)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(422)]
     [ServiceFilter(typeof(ValidationFilter))]
     public async Task<IActionResult> Authentication([FromBody] UserForAutheticationDto userForAuthetication)
     {
         if(!await _authenticationService.ValidUserAsync(userForAuthetication))
             return Unauthorized();
 
+        var tokenDto = await _authenticationService.CreateTokenAsync(populateExp: true);
 
+        return Ok(tokenDto);
     }
 }

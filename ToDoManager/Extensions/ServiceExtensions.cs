@@ -1,12 +1,17 @@
 ﻿using Contracts;
+using Domain.ConfigurationModels;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Persistence;
 using Persistence.Repositories;
 using Service;
 using Service.Contracts;
 using ToDoManager.Presentation.ActionFilters;
+using System.Text;
 
 namespace ToDoManager.Extensions;
 
@@ -40,5 +45,28 @@ public static class ServiceExtensions
         })
         .AddEntityFrameworkStores<RepositoryContext>()
         .AddDefaultTokenProviders();
+    }
+    public static void ConfigureJwt(this IServiceCollection services, IConfiguration configuration)
+    {
+        var secretKey = configuration["Secret:Key"]!;
+
+        services.AddAuthentication(opt =>
+        {
+            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = configuration["ValidIssuer"],
+                ValidAudience = configuration["ValidAudience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+            };
+        });
     }
 }

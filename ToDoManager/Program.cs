@@ -20,6 +20,7 @@ namespace ToDoManager
             builder.Services.ConfigureServices();
             builder.Services.ConfigureActionFilters();
             builder.Services.ConfigureIdentity();
+            builder.Services.ConfigureJwt(builder.Configuration);
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddAutoMapper(typeof(Program));
 

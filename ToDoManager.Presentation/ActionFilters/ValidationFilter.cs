@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Domain;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ToDoManager.Presentation.ActionFilters;
@@ -17,7 +18,7 @@ public class ValidationFilter : IActionFilter
         var param = context.ActionArguments.SingleOrDefault(x => x.Value.ToString().Contains("Dto")).Value;
         if (param is null)
         {
-            context.Result = new BadRequestObjectResult("Не указаны обязательные данные для заполнения");
+            context.Result = new BadRequestObjectResult(Messages.DontDto);
             return;
         }
 

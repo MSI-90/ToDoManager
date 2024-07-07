@@ -7,4 +7,5 @@ public interface IAuthenticationService
 {
     Task<IdentityResult> UserRegistrationAsync(UserForRegistrationDto userForRegistration);
     Task<bool> ValidUserAsync(UserForAutheticationDto userForAuthetication);
+    Task<TokenDto> CreateTokenAsync(bool populateExp);
 }

@@ -20,7 +20,7 @@ public class GlobalExceptionHandler : IExceptionHandler
             {
                 case AuthenticationUserException:
                     httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                    _logger.LogError(Messages.regError);
+                    _logger.LogError(Messages.RegError);
                     break;
                 case NotFoundException:
                     httpContext.Response.StatusCode = StatusCodes.Status404NotFound;

@@ -1,17 +1,16 @@
 ﻿using Contracts;
-using Domain.ConfigurationModels;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Persistence;
 using Persistence.Repositories;
 using Service;
 using Service.Contracts;
 using ToDoManager.Presentation.ActionFilters;
 using System.Text;
+using Domain.ConfigurationModels;
 
 namespace ToDoManager.Extensions;
 
@@ -48,6 +47,9 @@ public static class ServiceExtensions
     }
     public static void ConfigureJwt(this IServiceCollection services, IConfiguration configuration)
     {
+        var jwtConfiguration = new JwtConfiguration();
+        configuration.Bind(jwtConfiguration.Section, jwtConfiguration);
+
         var secretKey = configuration["Secret:Key"]!;
 
         services.AddAuthentication(opt =>
@@ -63,10 +65,13 @@ public static class ServiceExtensions
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = configuration["ValidIssuer"],
-                ValidAudience = configuration["ValidAudience"],
+                ValidIssuer = jwtConfiguration.ValidIssuer,
+                ValidAudience = jwtConfiguration.ValidAudience,
+                ClockSkew = TimeSpan.Zero,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
             };
+            var ooo = jwtConfiguration.ValidIssuer;
+            var ttt = jwtConfiguration.ValidAudience;
         });
     }
 }

@@ -29,6 +29,7 @@ public class AuthenticationController : ControllerBase
     [ProducesResponseType(201)]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
+    [ProducesResponseType(422)]
     [ServiceFilter(typeof(ValidationFilter))]
     public async Task<IActionResult> Registration([FromBody] UserForRegistrationDto userForRegistrationDto)
     {

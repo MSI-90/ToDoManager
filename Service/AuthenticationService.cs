@@ -25,17 +25,15 @@ public sealed class AuthenticationService : IAuthenticationService
     private readonly IMapper _mapper;
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<IdentityRole> _userRoles;
-    private readonly JwtConfiguration _jwtConfiguration;
     private User _user;
     public AuthenticationService(IConfiguration configuration, ILogger<AuthenticationService> logger, IMapper mapper, 
-        UserManager<User> userManager, RoleManager<IdentityRole> userRoles, IOptions<JwtConfiguration> jwtConfiguration)
+        UserManager<User> userManager, RoleManager<IdentityRole> userRoles)
     {
         _configuration = configuration;
         _logger = logger;
         _mapper = mapper;
         _userManager = userManager;
         _userRoles = userRoles;
-        _jwtConfiguration = jwtConfiguration.Value;
     }
 
     public async Task<IdentityResult> UserRegistrationAsync(UserForRegistrationDto userForRegistration)
@@ -105,10 +103,10 @@ public sealed class AuthenticationService : IAuthenticationService
     {
         var tokenOptions = new JwtSecurityToken
         (
-            issuer: _jwtConfiguration.ValidIssuer,
-            audience: _jwtConfiguration.ValidAudience,
+            issuer: _configuration["JwtSettings:ValidIssuer"],
+            audience: _configuration["JwtSettings:ValidAudience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_jwtConfiguration.Expires)),
+            expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["JwtSettings:Expires"])),
             signingCredentials: signingCredentials
         );
 
@@ -122,5 +120,40 @@ public sealed class AuthenticationService : IAuthenticationService
             kryptoRand.GetBytes(arrayForToken);
             return Convert.ToBase64String(arrayForToken);
         }
+    }
+    private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+    {
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = true,
+            ValidateIssuer = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Secret:Key"]!)),
+            ValidateLifetime = true,
+            ValidIssuer = _configuration["JwtSettings:ValidIssuer"],
+            ValidAudience = _configuration["JwtSettings:ValidAudience"]
+        };
+        var tokenHandler = new JwtSecurityTokenHandler();
+        SecurityToken securityToken;
+        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+        var jwtSecurityToken = securityToken as JwtSecurityToken;
+        if (jwtSecurityToken is null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+        {
+            _logger.LogWarning(Messages.WrongAccessToken);
+            throw new SecurityTokenException(Messages.WrongAccessToken);
+        }
+        
+        return principal;
+    }
+    public async Task<TokenDto> RefreshTokenAsync(TokenDto tokenDto)
+    {
+        var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken);
+        var user = await _userManager.FindByEmailAsync(principal.Identity?.Name);
+        if (user is null || user.RefreshToken != tokenDto.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+            throw new RefreshTokenBadRequestException();
+
+        _user = user;
+
+        return await CreateTokenAsync(populateExp: false);
     }
 }

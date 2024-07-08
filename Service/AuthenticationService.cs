@@ -39,6 +39,10 @@ public sealed class AuthenticationService : IAuthenticationService
 
     public async Task<IdentityResult> UserRegistrationAsync(UserForRegistrationDto userForRegistration)
     {
+        var uniqueNewUserMail = await _userManager.FindByEmailAsync(userForRegistration.Email);
+        if (uniqueNewUserMail is not null)
+            throw new RegistrationUserBadRequestException(Messages.EmailIsAlreadyExist);
+
         var user = _mapper.Map<User>(userForRegistration);
         var result = await _userManager.CreateAsync(user, userForRegistration.PasswordInput);
         if (!result.Succeeded)

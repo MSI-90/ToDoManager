@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ToDoManager.Presentation</name>
+    </assembly>
+    <members>
+        <member name="T:ToDoManager.Presentation.Controllers.AuthenticationController">
+            <summary>
+            Authentication controller
+            </summary>
+        </member>
+        <member name="M:ToDoManager.Presentation.Controllers.AuthenticationController.Registration(Shared.DataTransferObjects.UserForRegistrationDto)">
+            <summary>
+            Registration new user
+            </summary>
+            <param name="userForRegistrationDto"></param>
+            <returns>Create new user</returns>
+        </member>
+        <member name="M:ToDoManager.Presentation.Controllers.AuthenticationController.Authentication(Shared.DataTransferObjects.UserForAutheticationDto)">
+            <summary>
+            Authentication user
+            </summary>
+            <param name="userForAuthetication"></param>
+            <returns>JWT Bearer access and refresh tokens</returns>
+        </member>
+    </members>
+</doc>

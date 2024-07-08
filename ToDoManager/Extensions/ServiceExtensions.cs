@@ -11,6 +11,7 @@ using Service.Contracts;
 using ToDoManager.Presentation.ActionFilters;
 using System.Text;
 using Domain.ConfigurationModels;
+using Microsoft.OpenApi.Models;
 
 namespace ToDoManager.Extensions;
 
@@ -70,8 +71,57 @@ public static class ServiceExtensions
                 ClockSkew = TimeSpan.Zero,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
             };
-            var ooo = jwtConfiguration.ValidIssuer;
-            var ttt = jwtConfiguration.ValidAudience;
+        });
+    }
+    public static void ConfigureSwagger(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(s =>
+        {
+            s.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "ToDoManager API",
+                Version = "v1",
+                Description = "ToDoManager API by Miller",
+                TermsOfService = new Uri("https://example.com/terms"),
+                Contact = new OpenApiContact
+                {
+                    Name = "Sergey Miller",
+                    Email = "s.miller@list.ru",
+                    Url = new Uri(@"https://barnaul.hh.ru/applicant/resumes?hhtmFrom=main&hhtmFromLabel=header")
+                },
+                License = new OpenApiLicense
+                {
+                    Name = "ToDoManager API LICX",
+                    Url = new Uri("https://example.com/license")
+                }
+            });
+            s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Place to add JWT with Bearer",
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer"
+            });
+            s.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Name = "Bearer",
+                        },
+                        new List<string>()
+                    }
+                });
+
+            var xmlFile = $"{typeof(Presentation.AssemblyReference).Assembly.GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            s.IncludeXmlComments(xmlPath);
         });
     }
 }

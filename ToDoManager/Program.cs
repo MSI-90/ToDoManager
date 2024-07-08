@@ -33,6 +33,7 @@ namespace ToDoManager
                 .AddApplicationPart(typeof(ToDoManager.Presentation.AssemblyReference).Assembly);
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.ConfigureSwagger();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();

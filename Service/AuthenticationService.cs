@@ -5,6 +5,7 @@ using Domain.Entities;
 using Domain.Enums;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -42,13 +43,12 @@ public sealed class AuthenticationService : IAuthenticationService
         var result = await _userManager.CreateAsync(user, userForRegistration.PasswordInput);
         if (!result.Succeeded)
             throw new RegistrationProblemException(Messages.RegError);
-
+            
         if (await _userRoles.RoleExistsAsync(UserRoles.User.ToString()))
             await _userManager.AddToRoleAsync(user, UserRoles.User.ToString());
 
         return result;
     }
-
     public async Task<bool> ValidUserAsync(UserForAutheticationDto userForAuthetication)
     {
         _user = await _userManager.FindByEmailAsync(userForAuthetication.Email);
@@ -90,7 +90,8 @@ public sealed class AuthenticationService : IAuthenticationService
     {
         var claims = new List<Claim>()
         {
-            new Claim(ClaimTypes.Name, _user.Email!)
+            new Claim(ClaimTypes.Name, _user.Email!),
+            new Claim(ClaimTypes.NameIdentifier, _user.Id!)
         };
 
         var roles = await _userManager.GetRolesAsync(_user);

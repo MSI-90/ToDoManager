@@ -21,15 +21,17 @@ public class AuthenticationController : ControllerBase
     }
 
     /// <summary>
-    /// Registration new user
+    /// Регистрация нового пользователя
     /// </summary>
     /// <param name="userForRegistrationDto"></param>
     /// <returns>Create new user</returns>
     [HttpPost]
     [ProducesResponseType(201)]
     [ProducesResponseType(400)]
-    [ProducesResponseType(404)]
     [ProducesResponseType(422)]
+    /// <response code="201">Пользователь создан (user has been created)</response>
+    /// <response code="400">Не указаны обязательные данные для заполнения (information is undefined)</response>
+    /// <response code="422">Неверно указаны поля для заполнения (Invalid requaired information)</response>
     [ServiceFilter(typeof(ValidationFilter))]
     public async Task<IActionResult> Registration([FromBody] UserForRegistrationDto userForRegistrationDto)
     {
@@ -47,10 +49,15 @@ public class AuthenticationController : ControllerBase
     }
 
     /// <summary>
-    /// Authentication user
+    /// Аутентификация пользователя
     /// </summary>
     /// <param name="userForAuthetication"></param>
-    /// <returns>JWT Bearer access and refresh tokens</returns>
+    /// <returns>Получает JWT Bearer токен авторизации (Access token) и токен обновления (Refresh token)</returns>
+    /// <response code="200">Возвращает оба токена (Access and Refresh tokens)</response>
+    /// <response code="400">Не указаны обязательные данные для заполнения (information is undefined)</response>
+    /// <response code="401">Пользователь не прошел процедуру аутентификации (user is don't valid)</response>
+    /// <response code="404">Пользователь не найден по указаным для аутентификации данным</response>
+    /// <response code="422">Неверно указаны поля для заполнения (Invalid requaired information)</response>
     [HttpPost("login")]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]

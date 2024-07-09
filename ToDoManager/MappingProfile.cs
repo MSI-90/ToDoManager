@@ -12,5 +12,7 @@ public class MappingProfile : Profile
             .ForMember(c => c.UserName, opt => opt.MapFrom(x => x.Email));
 
         CreateMap<TaskItem, TaskItemDto>();
+
+        CreateMap<TaskItemForCreationDto, TaskItem>();
     }
 }

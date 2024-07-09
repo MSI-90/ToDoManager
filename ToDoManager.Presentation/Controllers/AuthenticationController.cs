@@ -25,13 +25,13 @@ public class AuthenticationController : ControllerBase
     /// </summary>
     /// <param name="userForRegistrationDto"></param>
     /// <returns>Create new user</returns>
+    /// <response code="201">Пользователь создан (user has been created)</response>
+    /// <response code="400">Не указаны обязательные данные для заполнения (information is undefined)</response>
+    /// <response code="422">Неверно указаны поля для заполнения (Invalid requaired information)</response>
     [HttpPost]
     [ProducesResponseType(201)]
     [ProducesResponseType(400)]
     [ProducesResponseType(422)]
-    /// <response code="201">Пользователь создан (user has been created)</response>
-    /// <response code="400">Не указаны обязательные данные для заполнения (information is undefined)</response>
-    /// <response code="422">Неверно указаны поля для заполнения (Invalid requaired information)</response>
     [ServiceFilter(typeof(ValidationFilter))]
     public async Task<IActionResult> Registration([FromBody] UserForRegistrationDto userForRegistrationDto)
     {

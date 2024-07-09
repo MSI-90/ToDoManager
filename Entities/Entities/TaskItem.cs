@@ -24,11 +24,11 @@ public class TaskItem
     [Column("priority")]
     public Priority PriorityTask { get; set; }
 
-    public bool IsCancelled { get; set; } = true;
+    public bool IsCancelled { get; set; } = false;
 
     [Column("creation_date")]
     [Required]
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; }
 
     [Column("expiration_date")]
     [Required]

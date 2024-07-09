@@ -17,5 +17,5 @@ public class TaskItemRepository : ITaskItemRepository
     public async Task<TaskItem?> GetTaskItemAsync(Guid userId, Guid taskItemId, CancellationToken token) => 
         await _repositoryContext.TaskItems.Where(t => t.Id == taskItemId && t.UserId == userId).FirstOrDefaultAsync(token);
 
-    public void DeleteTaskItem(Guid taskItemId) => _repositoryContext.Remove(taskItemId);
+    public void DeleteTaskItem(TaskItem taskItem) => _repositoryContext.TaskItems.Remove(taskItem);
 }

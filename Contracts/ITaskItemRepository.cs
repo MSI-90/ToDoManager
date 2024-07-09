@@ -4,5 +4,8 @@ namespace Contracts;
 
 public interface ITaskItemRepository
 {
-    Task<IEnumerable<TaskItem>> GetTasksAsync();
+    Task CreateTaskItemAsync(TaskItem taskItem);
+    Task<IEnumerable<TaskItem>> GetTaskItemsAsync(Guid userId, CancellationToken token);
+    Task<TaskItem?> GetTaskItemAsync(Guid userId, Guid taskItemId, CancellationToken token);
+    void DeleteTaskItem(Guid taskItemId);
 }

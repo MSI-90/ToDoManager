@@ -24,6 +24,8 @@ public class TaskItem
     [Column("priority")]
     public Priority PriorityTask { get; set; }
 
+    public bool IsCancelled { get; set; } = true;
+
     [Column("creation_date")]
     [Required]
     public DateTime CreatedAt { get; set; } = DateTime.Now;
@@ -34,7 +36,7 @@ public class TaskItem
 
     [Column("category_id")]
     [ForeignKey(nameof(Category))]
-    public Guid CategoryId { get; set; }
+    public Guid? CategoryId { get; set; }
     public Category? Category { get; set; }
 
     [Column("user_id")]

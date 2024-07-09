@@ -1,12 +1,11 @@
-﻿using Shared.Enums;
-
-namespace Shared.DataTransferObjects;
+﻿namespace Shared.DataTransferObjects;
 
 public record TaskItemDto(
     Guid Id, 
     string Title, 
     string Description, 
-    Priority PriorityTask,
+    string PriorityTask,
+    Guid CategoryId,
+    bool IsCancelled,
     DateTime CreatedAt,
-    DateTime ExpirationDate, 
-    string Category);
+    DateTime ExpirationDate);

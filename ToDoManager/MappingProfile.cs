@@ -10,6 +10,7 @@ public class MappingProfile : Profile
     {
         CreateMap<UserForRegistrationDto, User>()
             .ForMember(c => c.UserName, opt => opt.MapFrom(x => x.Email));
+
         CreateMap<TaskItem, TaskItemDto>();
     }
 }

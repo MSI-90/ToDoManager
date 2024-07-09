@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Persistence;
@@ -11,9 +12,11 @@ using Persistence;
 namespace ToDoManager.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20240709062205_ChangeCategoryIdToNULLvailable")]
+    partial class ChangeCategoryIdToNULLvailable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,14 +109,14 @@ namespace ToDoManager.Migrations
                         {
                             Id = "1ffabf88-601d-4840-ad89-1d50683d87c1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "20cec08a-1534-4438-8b35-d5f0e04eaf29",
+                            ConcurrencyStamp = "54f67122-f43a-412c-af32-677d1a819db5",
                             EmailConfirmed = false,
                             FirstName = "TestUserName",
                             LastName = "TestUserSername",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "01edd875-0352-4d27-beae-5355df307c01",
+                            SecurityStamp = "3becfa98-1b04-4a81-b658-2a33705a294d",
                             TwoFactorEnabled = false
                         });
                 });
@@ -173,9 +176,6 @@ namespace ToDoManager.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("expiration_date");
 
-                    b.Property<bool>("IsCancelled")
-                        .HasColumnType("boolean");
-
                     b.Property<byte>("PriorityTask")
                         .HasColumnType("smallint")
                         .HasColumnName("priority");
@@ -201,10 +201,9 @@ namespace ToDoManager.Migrations
                         {
                             Id = new Guid("60abbca8-664d-4b20-b5de-024705497d4a"),
                             CategoryId = new Guid("c3d4c014-49b6-410c-bc78-1d54a9991870"),
-                            CreatedAt = new DateTime(2024, 7, 9, 12, 51, 43, 331, DateTimeKind.Utc).AddTicks(8066),
+                            CreatedAt = new DateTime(2024, 7, 9, 6, 22, 3, 761, DateTimeKind.Utc).AddTicks(4422),
                             Description = "Пить кофе весело, пить кофе хорошо)",
                             ExpirationDate = new DateTime(2024, 7, 6, 23, 34, 42, 361, DateTimeKind.Utc),
-                            IsCancelled = true,
                             PriorityTask = (byte)1,
                             Title = "Попить кофе",
                             UserId = new Guid("00000000-0000-0000-0000-000000000000")

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Domain;
-using Domain.ConfigurationModels;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Exceptions;
@@ -132,7 +131,7 @@ public sealed class AuthenticationService : IAuthenticationService
             ValidateIssuer = true,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Secret:Key"]!)),
-            ValidateLifetime = true,
+            ValidateLifetime = false,
             ValidIssuer = _configuration["JwtSettings:ValidIssuer"],
             ValidAudience = _configuration["JwtSettings:ValidAudience"]
         };

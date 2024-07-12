@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Shared.DataTransferObjects;
 
-public record TaskItemForManipulationDto
+public record TaskItemForCreationWithCategoryDto
 {
     [Required(ErrorMessage = "Необходимо указать название задачи.")]
     [MinLength(5, ErrorMessage = "Минимальное число символов для наименования задачи - 5.")]
@@ -17,4 +17,5 @@ public record TaskItemForManipulationDto
 
     [Required]
     public DateTime ExpirationDate { get; init; }
+    public CategoryForCreationDto? Category { get; init; }
 }

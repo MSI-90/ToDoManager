@@ -13,6 +13,12 @@ public class MappingProfile : Profile
 
         CreateMap<TaskItem, TaskItemDto>();
 
+        CreateMap<TaskItem, TaskItemWithCategoryDto>();
+
         CreateMap<TaskItemForCreationDto, TaskItem>();
+
+        CreateMap<TaskItemForCreationWithCategoryDto, TaskItem>();
+
+        CreateMap<CategoryForCreationDto, Category>();
     }
 }

@@ -41,6 +41,16 @@ public class TaskItemService : ITaskItemService
         var taskItemToReturn = _mapper.Map<TaskItemDto>(taskItemEntity);
         return taskItemToReturn;
     }
+    public async Task<TaskItemWithCategoryDto> CreateTaskItemWithCategoryAsync(TaskItemForCreationWithCategoryDto taskItemFroCreation, Guid userId)
+    {
+        var taskItemEntity = _mapper.Map<TaskItem>(taskItemFroCreation);
+        taskItemEntity.UserId = userId;
+        await _repository.TaskItemRepository.CreateTaskItemAsync(taskItemEntity);
+        await _repository.SaveAsync();
+
+        var taskItemToReturn = _mapper.Map<TaskItemWithCategoryDto>(taskItemEntity);
+        return taskItemToReturn;
+    }
     public async Task DeleteTaskItemAsync(Guid userId, Guid taskItemId, CancellationToken token)
     {
         var taskItem = await CheckTaskItemExist(userId, taskItemId, token);

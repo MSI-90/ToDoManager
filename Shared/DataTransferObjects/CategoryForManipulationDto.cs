@@ -5,8 +5,6 @@ namespace Shared.DataTransferObjects;
 
 public class CategoryForManipulationDto
 {
-    public Guid Id { get; set; }
-
     [Required]
     [MinLength(5, ErrorMessage = "Минимальное число символов для наименования категории - 5.")]
     [StringLength(100, ErrorMessage = "Максимальное число символов для наименования категории - 100.")]

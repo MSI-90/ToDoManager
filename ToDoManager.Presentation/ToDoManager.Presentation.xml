@@ -67,6 +67,17 @@
             <response code="401">Пользователь не прошел процедуру аутентификации</response> 
             <response code="422">Неверно указаны поля для заполнения (Invalid requaired information)</response>
         </member>
+        <member name="M:ToDoManager.Presentation.Controllers.TaskItemController.CreateTakItemWithCategory(Shared.DataTransferObjects.TaskItemForCreationWithCategoryDto)">
+            <summary>
+            Создать новую задачу с категорией
+            </summary>
+            <param name="taskItemWithCategoryForCreation"></param>
+            <returns>Возвращает только-что созданную задачу</returns>
+            <response code="201">Оперция успешно выполнена</response>
+            <response code="400">Не указаны обязательные данные для заполнения (information is undefined)</response>
+            <response code="401">Пользователь не прошел процедуру аутентификации</response> 
+            <response code="422">Неверно указаны поля для заполнения (Invalid requaired information)</response>
+        </member>
         <member name="M:ToDoManager.Presentation.Controllers.TaskItemController.DeleteTaskItem(System.Guid,System.Threading.CancellationToken)">
             <summary>
             Удалить задачу по идентификатору

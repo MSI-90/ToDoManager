@@ -28,7 +28,7 @@ public class TaskItemController : ControllerBase
     /// <returns>Возвращает список задачь для пользователя, прошедшего процедуру аутентификации</returns>
     /// <response code="200">Оперция успешно выполнена</response>
     /// <response code="401">Пользователь не прошел процедуру аутентификации</response>
-    [HttpGet(Name = "GetTasItemsForUser")]
+    [HttpGet(Name = "GetTasItems")]
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     public async Task<IActionResult> GetTaskItems(CancellationToken token)
@@ -48,7 +48,7 @@ public class TaskItemController : ControllerBase
     /// <response code="200">Оперция успешно выполнена</response>
     /// <response code="401">Пользователь не прошел процедуру аутентификации</response> 
     /// <response code="404">Задача не найдена</response>
-    [HttpGet("{taskItemId:guid}", Name = "GetTaskItemForUserById")]
+    [HttpGet("{taskItemId:guid}", Name = "GetTaskItemById")]
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(404)]
@@ -69,7 +69,7 @@ public class TaskItemController : ControllerBase
     /// <response code="400">Не указаны обязательные данные для заполнения (information is undefined)</response>
     /// <response code="401">Пользователь не прошел процедуру аутентификации</response> 
     /// <response code="422">Неверно указаны поля для заполнения (Invalid requaired information)</response>
-    [HttpPost(Name = "CreateNewTaskForUser")]
+    [HttpPost(Name = "CreateNewTask")]
     [ProducesResponseType(201)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
@@ -80,7 +80,30 @@ public class TaskItemController : ControllerBase
         var user = HttpContext.User;
         Guid.TryParse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString(), out Guid userId);
         var result = await _taskItemService.CreateTaskItemAsync(taskItemForCreation, userId);
-        return CreatedAtRoute("GetTaskItemByUser", new { taskItemId = result.Id }, result);
+        return CreatedAtRoute("GetTaskItemById", new { taskItemId = result.Id }, result);
+    }
+
+    /// <summary>
+    /// Создать новую задачу с категорией
+    /// </summary>
+    /// <param name="taskItemWithCategoryForCreation"></param>
+    /// <returns>Возвращает только-что созданную задачу</returns>
+    /// <response code="201">Оперция успешно выполнена</response>
+    /// <response code="400">Не указаны обязательные данные для заполнения (information is undefined)</response>
+    /// <response code="401">Пользователь не прошел процедуру аутентификации</response> 
+    /// <response code="422">Неверно указаны поля для заполнения (Invalid requaired information)</response>
+    [HttpPost("createtaskwithcategory", Name = "CreateNewTaskWithCategory")]
+    [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(422)]
+    [ServiceFilter(typeof(ValidationFilter))]
+    public async Task<IActionResult> CreateTakItemWithCategory([FromBody] TaskItemForCreationWithCategoryDto taskItemWithCategoryForCreation)
+    {
+        var user = HttpContext.User;
+        Guid.TryParse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString(), out Guid userId);
+        var result = await _taskItemService.CreateTaskItemWithCategoryAsync(taskItemWithCategoryForCreation, userId);
+        return CreatedAtRoute("GetTaskItemById", new { taskItemId = result.Id }, result);
     }
 
     /// <summary>

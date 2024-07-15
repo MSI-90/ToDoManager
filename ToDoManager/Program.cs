@@ -15,6 +15,7 @@ namespace ToDoManager
                 loggerConfig.ReadFrom.Configuration(context.Configuration));
 
             // Add services to the container.
+            builder.Services.ConfigureCors();
             builder.Services.ConfigurePostgresConnection(builder.Configuration);
             builder.Services.ConfigureRepositoryManager();
             builder.Services.ConfigureServices();
@@ -54,6 +55,8 @@ namespace ToDoManager
             app.UseExceptionHandler(opt => { });
 
             app.UseSerilogRequestLogging();
+
+            app.UseCors("CorsPoslicy");
 
             app.UseAuthentication();
 

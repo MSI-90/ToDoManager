@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -6,18 +7,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ToDoManager.Migrations
 {
     /// <inheritdoc />
-    public partial class AddUserTable : Migration
+    public partial class Initialize : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<Guid>(
-                name: "user_id",
-                table: "tasks",
-                type: "uuid",
-                nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -33,36 +27,15 @@ namespace ToDoManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUsers",
+                name: "usercategory",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    sername = table.Column<string>(type: "character varying(70)", maxLength: 70, nullable: false),
-                    CategoryId = table.Column<Guid>(type: "uuid", nullable: true),
-                    UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    PasswordHash = table.Column<string>(type: "text", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "text", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "boolean", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "boolean", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "integer", nullable: false)
+                    user_id = table.Column<string>(type: "text", nullable: false),
+                    category_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "categories",
-                        principalColumn: "category_id");
+                    table.PrimaryKey("PK_usercategory", x => new { x.user_id, x.category_id });
                 });
 
             migrationBuilder.CreateTable(
@@ -84,6 +57,62 @@ namespace ToDoManager.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    FirstName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "character varying(70)", maxLength: 70, nullable: false),
+                    RefreshToken = table.Column<string>(type: "text", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserCategoryCategoryId = table.Column<Guid>(type: "uuid", nullable: true),
+                    UserCategoryUserId = table.Column<string>(type: "text", nullable: true),
+                    UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    PasswordHash = table.Column<string>(type: "text", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "text", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "boolean", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "boolean", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_usercategory_UserCategoryUserId_UserCategoryCat~",
+                        columns: x => new { x.UserCategoryUserId, x.UserCategoryCategoryId },
+                        principalTable: "usercategory",
+                        principalColumns: new[] { "user_id", "category_id" });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "categories",
+                columns: table => new
+                {
+                    category_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    category_title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    UserCategoryCategoryId = table.Column<Guid>(type: "uuid", nullable: true),
+                    UserCategoryUserId = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_categories", x => x.category_id);
+                    table.ForeignKey(
+                        name: "FK_categories_usercategory_UserCategoryUserId_UserCategoryCate~",
+                        columns: x => new { x.UserCategoryUserId, x.UserCategoryCategoryId },
+                        principalTable: "usercategory",
+                        principalColumns: new[] { "user_id", "category_id" });
                 });
 
             migrationBuilder.CreateTable(
@@ -172,6 +201,30 @@ namespace ToDoManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "tasks",
+                columns: table => new
+                {
+                    task_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    task_title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    priority = table.Column<byte>(type: "smallint", nullable: false),
+                    IsCancelled = table.Column<bool>(type: "boolean", nullable: false),
+                    creation_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    expiration_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    category_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tasks", x => x.task_id);
+                    table.ForeignKey(
+                        name: "FK_tasks_categories_category_id",
+                        column: x => x.category_id,
+                        principalTable: "categories",
+                        principalColumn: "category_id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TaskItemUser",
                 columns: table => new
                 {
@@ -195,12 +248,30 @@ namespace ToDoManager.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.UpdateData(
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "fcd854e5-2c91-49be-9f8a-db4bc0d95b28", null, "TestRole", "TESTROLE" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "RefreshToken", "RefreshTokenExpiryTime", "SecurityStamp", "TwoFactorEnabled", "UserCategoryCategoryId", "UserCategoryUserId", "UserName" },
+                values: new object[] { "1ffabf88-601d-4840-ad89-1d50683d87c1", 0, "21415831-2150-4180-9e4b-50893fed79fe", null, false, "TestUserName", "TestUserSername", false, null, null, null, null, null, false, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "5a0fdbe4-7956-4dec-9340-d30562b44369", false, null, null, null });
+
+            migrationBuilder.InsertData(
+                table: "categories",
+                columns: new[] { "category_id", "description", "category_title", "UserCategoryCategoryId", "UserCategoryUserId" },
+                values: new object[] { new Guid("c3d4c014-49b6-410c-bc78-1d54a9991870"), "Здесь как правило нет каких то значимых дел", "Досуг", null, null });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { "fcd854e5-2c91-49be-9f8a-db4bc0d95b28", "1ffabf88-601d-4840-ad89-1d50683d87c1" });
+
+            migrationBuilder.InsertData(
                 table: "tasks",
-                keyColumn: "task_id",
-                keyValue: new Guid("60abbca8-664d-4b20-b5de-024705497d4a"),
-                columns: new[] { "creation_date", "expiration_date", "user_id" },
-                values: new object[] { new DateTime(2024, 7, 4, 9, 27, 22, 148, DateTimeKind.Utc).AddTicks(3051), new DateTime(2024, 7, 6, 23, 34, 42, 361, DateTimeKind.Utc), new Guid("00000000-0000-0000-0000-000000000000") });
+                columns: new[] { "task_id", "category_id", "creation_date", "description", "expiration_date", "IsCancelled", "priority", "task_title", "user_id" },
+                values: new object[] { new Guid("60abbca8-664d-4b20-b5de-024705497d4a"), new Guid("c3d4c014-49b6-410c-bc78-1d54a9991870"), new DateTime(2024, 7, 15, 7, 33, 47, 405, DateTimeKind.Utc).AddTicks(278), "Пить кофе весело, пить кофе хорошо)", new DateTime(2024, 7, 6, 23, 34, 42, 361, DateTimeKind.Utc), false, (byte)1, "Попить кофе", new Guid("00000000-0000-0000-0000-000000000000") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -234,9 +305,9 @@ namespace ToDoManager.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_CategoryId",
+                name: "IX_AspNetUsers_UserCategoryUserId_UserCategoryCategoryId",
                 table: "AspNetUsers",
-                column: "CategoryId");
+                columns: new[] { "UserCategoryUserId", "UserCategoryCategoryId" });
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -245,9 +316,19 @@ namespace ToDoManager.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_categories_UserCategoryUserId_UserCategoryCategoryId",
+                table: "categories",
+                columns: new[] { "UserCategoryUserId", "UserCategoryCategoryId" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TaskItemUser_UserId",
                 table: "TaskItemUser",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tasks_category_id",
+                table: "tasks",
+                column: "category_id");
         }
 
         /// <inheritdoc />
@@ -277,16 +358,14 @@ namespace ToDoManager.Migrations
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
-            migrationBuilder.DropColumn(
-                name: "user_id",
-                table: "tasks");
+            migrationBuilder.DropTable(
+                name: "tasks");
 
-            migrationBuilder.UpdateData(
-                table: "tasks",
-                keyColumn: "task_id",
-                keyValue: new Guid("60abbca8-664d-4b20-b5de-024705497d4a"),
-                columns: new[] { "creation_date", "expiration_date" },
-                values: new object[] { new DateTime(2024, 7, 2, 16, 43, 46, 516, DateTimeKind.Utc).AddTicks(8536), new DateTime(2024, 7, 6, 23, 34, 42, 361, DateTimeKind.Utc).AddTicks(7996) });
+            migrationBuilder.DropTable(
+                name: "categories");
+
+            migrationBuilder.DropTable(
+                name: "usercategory");
         }
     }
 }

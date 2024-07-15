@@ -13,7 +13,6 @@ public record TaskItemForCreationWithCategoryDto
     [StringLength(200, ErrorMessage = "Максимальная число символов для поля описание задачи - 200")]
     public string? Description { get; init; }
     public Priority PriorityTask { get; init; }
-    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
     [Required]
     public DateTime ExpirationDate { get; init; }

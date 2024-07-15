@@ -12,8 +12,8 @@ using Persistence;
 namespace ToDoManager.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20240704111226_AddTestUserWithRole")]
-    partial class AddTestUserWithRole
+    [Migration("20240715073347_Initialize")]
+    partial class Initialize
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,14 +47,12 @@ namespace ToDoManager.Migrations
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(70)
-                        .HasColumnType("character varying(70)")
-                        .HasColumnName("sername");
+                        .HasColumnType("character varying(70)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
@@ -79,11 +77,23 @@ namespace ToDoManager.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
+
+                    b.Property<Guid?>("UserCategoryCategoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("UserCategoryUserId")
+                        .HasColumnType("text");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
@@ -98,6 +108,8 @@ namespace ToDoManager.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
+                    b.HasIndex("UserCategoryUserId", "UserCategoryCategoryId");
+
                     b.ToTable("AspNetUsers", (string)null);
 
                     b.HasData(
@@ -105,15 +117,31 @@ namespace ToDoManager.Migrations
                         {
                             Id = "1ffabf88-601d-4840-ad89-1d50683d87c1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "63bf5f68-6a76-440f-8762-7add7049822a",
+                            ConcurrencyStamp = "21415831-2150-4180-9e4b-50893fed79fe",
                             EmailConfirmed = false,
                             FirstName = "TestUserName",
                             LastName = "TestUserSername",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0c251269-9e13-4a73-a14b-2c368827e7a2",
+                            RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SecurityStamp = "5a0fdbe4-7956-4dec-9340-d30562b44369",
                             TwoFactorEnabled = false
                         });
+                });
+
+            modelBuilder.Entity("Domain.Entities.UserCategory", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("text")
+                        .HasColumnName("user_id");
+
+                    b.Property<Guid?>("CategoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("category_id");
+
+                    b.HasKey("UserId", "CategoryId");
+
+                    b.ToTable("usercategory");
                 });
 
             modelBuilder.Entity("Entities.Category", b =>
@@ -134,7 +162,15 @@ namespace ToDoManager.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("category_title");
 
+                    b.Property<Guid?>("UserCategoryCategoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("UserCategoryUserId")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserCategoryUserId", "UserCategoryCategoryId");
 
                     b.ToTable("categories");
 
@@ -154,7 +190,7 @@ namespace ToDoManager.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("task_id");
 
-                    b.Property<Guid>("CategoryId")
+                    b.Property<Guid?>("CategoryId")
                         .HasColumnType("uuid")
                         .HasColumnName("category_id");
 
@@ -170,6 +206,9 @@ namespace ToDoManager.Migrations
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("expiration_date");
+
+                    b.Property<bool>("IsCancelled")
+                        .HasColumnType("boolean");
 
                     b.Property<byte>("PriorityTask")
                         .HasColumnType("smallint")
@@ -196,9 +235,10 @@ namespace ToDoManager.Migrations
                         {
                             Id = new Guid("60abbca8-664d-4b20-b5de-024705497d4a"),
                             CategoryId = new Guid("c3d4c014-49b6-410c-bc78-1d54a9991870"),
-                            CreatedAt = new DateTime(2024, 7, 4, 11, 12, 26, 343, DateTimeKind.Utc).AddTicks(3063),
+                            CreatedAt = new DateTime(2024, 7, 15, 7, 33, 47, 405, DateTimeKind.Utc).AddTicks(278),
                             Description = "Пить кофе весело, пить кофе хорошо)",
                             ExpirationDate = new DateTime(2024, 7, 6, 23, 34, 42, 361, DateTimeKind.Utc),
+                            IsCancelled = false,
                             PriorityTask = (byte)1,
                             Title = "Попить кофе",
                             UserId = new Guid("00000000-0000-0000-0000-000000000000")
@@ -367,13 +407,25 @@ namespace ToDoManager.Migrations
                     b.ToTable("TaskItemUser");
                 });
 
+            modelBuilder.Entity("Domain.Entities.User", b =>
+                {
+                    b.HasOne("Domain.Entities.UserCategory", null)
+                        .WithMany("User")
+                        .HasForeignKey("UserCategoryUserId", "UserCategoryCategoryId");
+                });
+
+            modelBuilder.Entity("Entities.Category", b =>
+                {
+                    b.HasOne("Domain.Entities.UserCategory", null)
+                        .WithMany("Category")
+                        .HasForeignKey("UserCategoryUserId", "UserCategoryCategoryId");
+                });
+
             modelBuilder.Entity("Entities.TaskItem", b =>
                 {
                     b.HasOne("Entities.Category", "Category")
                         .WithMany("Tasks")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
                 });
@@ -442,6 +494,13 @@ namespace ToDoManager.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.UserCategory", b =>
+                {
+                    b.Navigation("Category");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Entities.Category", b =>

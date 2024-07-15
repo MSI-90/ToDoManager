@@ -12,11 +12,19 @@ using ToDoManager.Presentation.ActionFilters;
 using System.Text;
 using Domain.ConfigurationModels;
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Options;
 
 namespace ToDoManager.Extensions;
 
 public static class ServiceExtensions
 {
+    public static void ConfigureCors(this IServiceCollection services) => services.AddCors(options =>
+    {
+        options.AddPolicy("CorsPoslicy", builder => builder.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .WithExposedHeaders("X-Pagination"));
+    });
     public static void ConfigurePostgresConnection(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<RepositoryContext>(options => options.UseNpgsql(configuration.GetConnectionString("sqlConnection")));

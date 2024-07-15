@@ -15,9 +15,13 @@ public class MappingProfile : Profile
 
         CreateMap<TaskItem, TaskItemWithCategoryDto>();
 
-        CreateMap<TaskItemForCreationDto, TaskItem>();
+        CreateMap<TaskItemForCreationDto, TaskItem>().
+            ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow));
 
-        CreateMap<TaskItemForCreationWithCategoryDto, TaskItem>();
+        CreateMap<TaskItemForCreationWithCategoryDto, TaskItem>()
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow));
+
+        CreateMap<TaskItem, UserCategory>();
 
         CreateMap<CategoryForCreationDto, Category>();
     }

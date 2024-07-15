@@ -5,7 +5,6 @@ using Domain.Exceptions;
 using Entities;
 using Service.Contracts;
 using Shared.DataTransferObjects;
-using System.Threading.Tasks;
 
 namespace Service;
 
@@ -33,6 +32,7 @@ public class TaskItemService : ITaskItemService
     }
     public async Task<TaskItemDto> CreateTaskItemAsync(TaskItemForCreationDto taskItemFroCreation, Guid userId)
     {
+
         var taskItemEntity = _mapper.Map<TaskItem>(taskItemFroCreation);
         taskItemEntity.UserId = userId;
         await _repository.TaskItemRepository.CreateTaskItemAsync(taskItemEntity);
@@ -46,6 +46,10 @@ public class TaskItemService : ITaskItemService
         var taskItemEntity = _mapper.Map<TaskItem>(taskItemFroCreation);
         taskItemEntity.UserId = userId;
         await _repository.TaskItemRepository.CreateTaskItemAsync(taskItemEntity);
+
+        var userCategoryEntity = new UserCategory { UserId = userId.ToString(), CategoryId = taskItemEntity.CategoryId };
+        await _repository.UserCategoryRepository.CreateUserCategoryAsync(userCategoryEntity);
+
         await _repository.SaveAsync();
 
         var taskItemToReturn = _mapper.Map<TaskItemWithCategoryDto>(taskItemEntity);

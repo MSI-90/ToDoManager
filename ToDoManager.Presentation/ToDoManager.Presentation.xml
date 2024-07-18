@@ -36,10 +36,11 @@
             TaskItem controller
             </summary>
         </member>
-        <member name="M:ToDoManager.Presentation.Controllers.TaskItemController.GetTaskItems(System.Threading.CancellationToken)">
+        <member name="M:ToDoManager.Presentation.Controllers.TaskItemController.GetTaskItems(Shared.RequestFeeatures.TaskItemParameters,System.Threading.CancellationToken)">
             <summary>
             Получить все задачи для польззователя
             </summary>
+            <param name="parameters"></param>
             <param name="token"></param>
             <returns>Возвращает список задачь для пользователя, прошедшего процедуру аутентификации</returns>
             <response code="200">Оперция успешно выполнена</response>

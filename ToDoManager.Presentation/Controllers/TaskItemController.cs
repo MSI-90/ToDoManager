@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestFeeatures;
 using System.Security.Claims;
 using ToDoManager.Presentation.ActionFilters;
 namespace ToDoManager.Presentation.Controllers;
@@ -24,6 +25,7 @@ public class TaskItemController : ControllerBase
     /// <summary>
     /// Получить все задачи для польззователя
     /// </summary>
+    /// <param name="parameters"></param>
     /// <param name="token"></param>
     /// <returns>Возвращает список задачь для пользователя, прошедшего процедуру аутентификации</returns>
     /// <response code="200">Оперция успешно выполнена</response>
@@ -31,11 +33,11 @@ public class TaskItemController : ControllerBase
     [HttpGet(Name = "GetTasItems")]
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
-    public async Task<IActionResult> GetTaskItems(CancellationToken token)
+    public async Task<IActionResult> GetTaskItems([FromQuery] TaskItemParameters parameters, CancellationToken token)
     {
         var user = HttpContext.User;
         Guid.TryParse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString(), out Guid userId);
-        var result = await _taskItemService.GetTaskItemsAsync(userId, token);
+        var result = await _taskItemService.GetTaskItemsAsync(userId, parameters, token);
         return Ok(result);
     }
 

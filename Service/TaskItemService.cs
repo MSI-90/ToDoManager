@@ -5,6 +5,7 @@ using Domain.Exceptions;
 using Entities;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestFeeatures;
 
 namespace Service;
 
@@ -18,9 +19,9 @@ public class TaskItemService : ITaskItemService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<TaskItemDto>> GetTaskItemsAsync(Guid userId, CancellationToken token)
+    public async Task<IEnumerable<TaskItemDto>> GetTaskItemsAsync(Guid userId, TaskItemParameters parameters, CancellationToken token)
     {
-        var itemsFromRepository = await _repository.TaskItemRepository.GetTaskItemsAsync(userId, token);
+        var itemsFromRepository = await _repository.TaskItemRepository.GetTaskItemsAsync(userId, parameters, token);
         var taskItems = _mapper.Map<IEnumerable<TaskItemDto>>(itemsFromRepository);
         return taskItems;
     }
@@ -32,7 +33,6 @@ public class TaskItemService : ITaskItemService
     }
     public async Task<TaskItemDto> CreateTaskItemAsync(TaskItemForCreationDto taskItemFroCreation, Guid userId)
     {
-
         var taskItemEntity = _mapper.Map<TaskItem>(taskItemFroCreation);
         taskItemEntity.UserId = userId;
         await _repository.TaskItemRepository.CreateTaskItemAsync(taskItemEntity);

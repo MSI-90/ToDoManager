@@ -54,7 +54,7 @@ public sealed class AuthenticationService : IAuthenticationService
     {
         _user = await _userManager.FindByEmailAsync(userForAuthetication.Email);
         if (_user is null)
-            throw new UserNotFoundException(userForAuthetication.Email);
+            throw new UserEmailNotFoundException(userForAuthetication.Email);
 
         var result = (_user is not null && await _userManager.CheckPasswordAsync(_user, userForAuthetication.Password));
         if (!result)

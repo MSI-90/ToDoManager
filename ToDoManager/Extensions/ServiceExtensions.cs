@@ -13,6 +13,7 @@ using System.Text;
 using Domain.ConfigurationModels;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Options;
+using ToDoManager.Presentation;
 
 namespace ToDoManager.Extensions;
 
@@ -35,6 +36,7 @@ public static class ServiceExtensions
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<ITaskItemService, TaskItemService>();
         services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<IUserContext, UserContext>();
     }
     public static void ConfigureActionFilters(this IServiceCollection services)
     {

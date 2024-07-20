@@ -17,9 +17,11 @@ namespace ToDoManager.Presentation.Controllers;
 public class TaskItemController : ControllerBase
 {
     private readonly ITaskItemService _taskItemService;
-    public TaskItemController(ITaskItemService taskItemService)
+    private readonly IUserContext _userContext;
+    public TaskItemController(ITaskItemService taskItemService, IUserContext userContext)
     {
         _taskItemService = taskItemService;
+        _userContext = userContext;
     }
 
     /// <summary>
@@ -35,8 +37,7 @@ public class TaskItemController : ControllerBase
     [ProducesResponseType(401)]
     public async Task<IActionResult> GetTaskItems([FromQuery] TaskItemParameters parameters, CancellationToken token)
     {
-        var user = HttpContext.User;
-        Guid.TryParse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString(), out Guid userId);
+        var userId = _userContext.UserId;
         var result = await _taskItemService.GetTaskItemsAsync(userId, parameters, token);
         return Ok(result);
     }
@@ -56,8 +57,7 @@ public class TaskItemController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetTaskItem(Guid taskItemId, CancellationToken token)
     {
-        var user = HttpContext.User;
-        Guid.TryParse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString(), out Guid userId);
+        var userId = _userContext.UserId;
         var result = await _taskItemService.GetTaskItemAsync(userId, taskItemId, token);
         return Ok(result);
     }
@@ -79,8 +79,7 @@ public class TaskItemController : ControllerBase
     [ServiceFilter(typeof(ValidationFilter))]
     public async Task<IActionResult> CreateTakItem([FromBody] TaskItemForCreationDto taskItemForCreation)
     {
-        var user = HttpContext.User;
-        Guid.TryParse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString(), out Guid userId);
+        var userId = _userContext.UserId;
         var result = await _taskItemService.CreateTaskItemAsync(taskItemForCreation, userId);
         return CreatedAtRoute("GetTaskItemById", new { taskItemId = result.Id }, result);
     }
@@ -102,8 +101,7 @@ public class TaskItemController : ControllerBase
     [ServiceFilter(typeof(ValidationFilter))]
     public async Task<IActionResult> CreateTakItemWithCategory([FromBody] TaskItemForCreationWithCategoryDto taskItemWithCategoryForCreation)
     {
-        var user = HttpContext.User;
-        Guid.TryParse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString(), out Guid userId);
+        var userId = _userContext.UserId;
         var result = await _taskItemService.CreateTaskItemWithCategoryAsync(taskItemWithCategoryForCreation, userId);
         return CreatedAtRoute("GetTaskItemById", new { taskItemId = result.Id }, result);
     }
@@ -123,8 +121,7 @@ public class TaskItemController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> DeleteTaskItem(Guid taskItemId, CancellationToken token)
     {
-        var user = HttpContext.User;
-        Guid.TryParse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString(), out Guid userId);
+        var userId = _userContext.UserId;
         await _taskItemService.DeleteTaskItemAsync(userId, taskItemId, token);
         return NoContent();
     }

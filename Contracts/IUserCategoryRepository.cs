@@ -4,5 +4,5 @@ namespace Contracts;
 
 public interface IUserCategoryRepository
 {
-    Task CreateUserCategoryAsync(UserCategory userCategory);
+    Task UserCategoryAddAsync(UserCategory userCategory);
 }

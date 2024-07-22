@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Contracts;
-using Domain.Entities;
 using Domain.Exceptions;
 using Entities;
 using Service.Contracts;
@@ -12,11 +11,13 @@ namespace Service;
 public class TaskItemService : ITaskItemService
 {
     private readonly IRepositoryManager _repository;
+    private readonly IUserCategoryService _userCategoryService;
     private readonly IMapper _mapper;
-    public TaskItemService(IRepositoryManager repository, IMapper mapper, ICategoryService categoryService)
+    public TaskItemService(IRepositoryManager repository, IMapper mapper, ICategoryService categoryService, IUserCategoryService userCategoryService)
     {
         _repository = repository;
         _mapper = mapper;
+        _userCategoryService = userCategoryService;
     }
 
     public async Task<IEnumerable<TaskItemDto>> GetTaskItemsAsync(Guid userId, TaskItemParameters parameters, CancellationToken token)
@@ -47,8 +48,7 @@ public class TaskItemService : ITaskItemService
         taskItemEntity.UserId = userId;
         await _repository.TaskItemRepository.CreateTaskItemAsync(taskItemEntity);
 
-        var userCategoryEntity = new UserCategory { UserId = userId.ToString(), CategoryId = taskItemEntity.CategoryId };
-        await _repository.UserCategoryRepository.CreateUserCategoryAsync(userCategoryEntity);
+        await _userCategoryService.UserCategoryAddAsync(new UserCategoryForCreationDto { UserId = userId.ToString(), CategoryId = taskItemEntity.CategoryId});
 
         await _repository.SaveAsync();
 

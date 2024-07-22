@@ -7,5 +7,5 @@ public class UserCategoryRepository : IUserCategoryRepository
 {
     private readonly RepositoryContext _repositoryContext;
     public UserCategoryRepository(RepositoryContext repositoryContext) => _repositoryContext = repositoryContext;
-    public async Task CreateUserCategoryAsync(UserCategory userCategory) => await _repositoryContext.AddAsync(userCategory);
+    public async Task UserCategoryAddAsync(UserCategory userCategory) => await _repositoryContext.AddAsync(userCategory);
 }

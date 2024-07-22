@@ -23,6 +23,8 @@ public class MappingProfile : Profile
 
         CreateMap<TaskItem, UserCategory>();
 
+        CreateMap<UserCategoryForCreationDto, UserCategory>();
+
         CreateMap<CategoryForCreationDto, Category>();
     }
 }

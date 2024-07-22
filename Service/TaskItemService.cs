@@ -13,7 +13,7 @@ public class TaskItemService : ITaskItemService
 {
     private readonly IRepositoryManager _repository;
     private readonly IMapper _mapper;
-    public TaskItemService(IRepositoryManager repository, IMapper mapper)
+    public TaskItemService(IRepositoryManager repository, IMapper mapper, ICategoryService categoryService)
     {
         _repository = repository;
         _mapper = mapper;

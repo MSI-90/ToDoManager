@@ -23,14 +23,12 @@ public class TaskItemService : ITaskItemService
     public async Task<IEnumerable<TaskItemDto>> GetTaskItemsAsync(Guid userId, TaskItemParameters parameters, CancellationToken token)
     {
         var itemsFromRepository = await _repository.TaskItemRepository.GetTaskItemsAsync(userId, parameters, token);
-        var taskItems = _mapper.Map<IEnumerable<TaskItemDto>>(itemsFromRepository);
-        return taskItems;
+        return _mapper.Map<IEnumerable<TaskItemDto>>(itemsFromRepository);
     }
     public async Task<TaskItemDto> GetTaskItemAsync(Guid userId, Guid taskId, CancellationToken token)
     {
         var taskItemFromRepository = await CheckTaskItemExist(userId, taskId, token);
-        var taskItem = _mapper.Map<TaskItemDto>(taskItemFromRepository);
-        return taskItem;
+        return _mapper.Map<TaskItemDto>(taskItemFromRepository);
     }
     public async Task<TaskItemDto> CreateTaskItemAsync(TaskItemForCreationDto taskItemFroCreation, Guid userId)
     {
@@ -39,8 +37,7 @@ public class TaskItemService : ITaskItemService
         await _repository.TaskItemRepository.CreateTaskItemAsync(taskItemEntity);
         await _repository.SaveAsync();
 
-        var taskItemToReturn = _mapper.Map<TaskItemDto>(taskItemEntity);
-        return taskItemToReturn;
+        return _mapper.Map<TaskItemDto>(taskItemEntity); ;
     }
     public async Task<TaskItemWithCategoryDto> CreateTaskItemWithCategoryAsync(TaskItemForCreationWithCategoryDto taskItemFroCreation, Guid userId)
     {
@@ -48,12 +45,15 @@ public class TaskItemService : ITaskItemService
         taskItemEntity.UserId = userId;
         await _repository.TaskItemRepository.CreateTaskItemAsync(taskItemEntity);
 
-        await _userCategoryService.UserCategoryAddAsync(new UserCategoryForCreationDto { UserId = userId.ToString(), CategoryId = taskItemEntity.CategoryId});
+        await _userCategoryService.UserCategoryAddAsync(new UserCategoryForCreationDto 
+        {
+            UserId = userId.ToString(), 
+            CategoryId = taskItemEntity.CategoryId
+        });
 
         await _repository.SaveAsync();
-
-        var taskItemToReturn = _mapper.Map<TaskItemWithCategoryDto>(taskItemEntity);
-        return taskItemToReturn;
+        
+        return _mapper.Map<TaskItemWithCategoryDto>(taskItemEntity);
     }
     public async Task DeleteTaskItemAsync(Guid userId, Guid taskItemId, CancellationToken token)
     {

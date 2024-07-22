@@ -31,6 +31,11 @@
             <response code="404">Пользователь не найден по указаным для аутентификации данным</response>
             <response code="422">Неверно указаны поля для заполнения (Invalid requaired information)</response>
         </member>
+        <member name="T:ToDoManager.Presentation.Controllers.CategoryController">
+            <summary>
+            Category controller
+            </summary>
+        </member>
         <member name="T:ToDoManager.Presentation.Controllers.TaskItemController">
             <summary>
             TaskItem controller

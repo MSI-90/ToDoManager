@@ -26,5 +26,7 @@ public class MappingProfile : Profile
         CreateMap<UserCategoryForCreationDto, UserCategory>();
 
         CreateMap<CategoryForCreationDto, Category>();
+
+        CreateMap<Category, CategoryDto>();
     }
 }

@@ -4,5 +4,5 @@ namespace Service.Contracts;
 
 public interface ICategoryService
 {
-    Task CrerateCategoryAsync(CategoryForCreationDto categoryForCreationDto);
+    Task<CategoryDto> CrerateCategoryAsync(CategoryForCreationDto categoryForCreationDto, Guid userId);
 }

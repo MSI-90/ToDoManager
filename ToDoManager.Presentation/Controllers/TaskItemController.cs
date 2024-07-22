@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Routing;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 using Shared.RequestFeeatures;
-using System.Security.Claims;
 using ToDoManager.Presentation.ActionFilters;
 namespace ToDoManager.Presentation.Controllers;
 

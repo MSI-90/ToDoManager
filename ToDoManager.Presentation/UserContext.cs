@@ -12,4 +12,6 @@ public sealed class UserContext : IUserContext
     public Guid UserId => 
         _httpContextAccessor.HttpContext?.User.GetUserId() ?? throw new ApplicationException("Данные недоступны");
 
+    public bool IsAuthenticate => 
+        _httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated ?? throw new ApplicationException("Данные недоступны");
 }

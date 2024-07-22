@@ -12,6 +12,6 @@ public class UserCategory
     [Column("category_id")]
     public Guid? CategoryId { get; set; }
 
-    public ICollection<User> User { get; set; } = null!;
-    public ICollection<Category> Category {  get; set; } = null!;
+    public /*ICollection<User>*/ User User { get; set; } = null!;
+    public /*ICollection<Category>*/ Category Category {  get; set; } = null!;
 }

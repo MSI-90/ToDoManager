@@ -2,5 +2,6 @@
 
 public interface IUserContext
 {
+    bool IsAuthenticate { get; }
     Guid UserId { get; }
 }

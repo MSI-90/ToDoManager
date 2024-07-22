@@ -18,8 +18,5 @@ public class RepositoryContext : IdentityDbContext<User>
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(RepositoryContext).Assembly);
-
-        modelBuilder.Entity<UserCategory>()
-            .HasKey(uc => new { uc.UserId, uc.CategoryId });
     }
 }

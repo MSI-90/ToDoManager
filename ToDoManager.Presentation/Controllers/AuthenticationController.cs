@@ -67,8 +67,7 @@ public class AuthenticationController : ControllerBase
     [ServiceFilter(typeof(ValidationFilter))]
     public async Task<IActionResult> Authentication([FromBody] UserForAutheticationDto userForAuthetication)
     {
-        if(!await _authenticationService.ValidUserAsync(userForAuthetication))
-            return Unauthorized();
+        await _authenticationService.ValidUserAsync(userForAuthetication);
 
         var tokenDto = await _authenticationService.CreateTokenAsync(populateExp: true);
 

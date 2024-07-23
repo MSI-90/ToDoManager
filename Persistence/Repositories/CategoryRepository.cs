@@ -17,7 +17,7 @@ public class CategoryRepository : ICategoryRepository
 
     public void DeleteCategory(Category category) => _repositoryContext.Remove(category);
 
-    public async Task<IEnumerable<Category>> GetCategoriesAsync(CancellationToken token) => 
+    public async Task<IEnumerable<Category>> GetCategoriesAsync(Guid userId, CancellationToken token) => 
         await _repositoryContext.Categories.ToListAsync(token);
 
     public async Task<Category?> GetCategoryAsync(Guid id, CancellationToken token) =>

@@ -58,8 +58,11 @@ public sealed class AuthenticationService : IAuthenticationService
 
         var result = (_user is not null && await _userManager.CheckPasswordAsync(_user, userForAuthetication.Password));
         if (!result)
+        {
             _logger.LogWarning($"{nameof(_user)}: {Messages.InvalidAuthData}");
-
+            throw new UserPasswordNotFoundException();
+        }
+        
         return result;
     }
     public async Task<TokenDto> CreateTokenAsync(bool populateExp)

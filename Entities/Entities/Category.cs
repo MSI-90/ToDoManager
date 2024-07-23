@@ -19,5 +19,7 @@ public class Category
     [Column("description")]
     [StringLength(200, ErrorMessage = "Максимальная число символов для поля описание категории - 200")]
     public string? Description { get; set; }
-    public ICollection<TaskItem>? Tasks { get; set; }
+
+    [ForeignKey(nameof(User))]
+    public Guid Userid { get; set; }
 }

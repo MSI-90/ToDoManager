@@ -9,7 +9,6 @@ public class RepositoryContext : IdentityDbContext<User>
 {
     public DbSet<TaskItem> TaskItems { get; set; }
     public DbSet<Category> Categories { get; set; }
-    public DbSet<UserCategory> UsersCategories { get; set; }
     public RepositoryContext (DbContextOptions options) : base(options)
     {
     }

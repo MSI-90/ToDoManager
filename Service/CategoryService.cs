@@ -9,28 +9,26 @@ namespace Service;
 public class CategoryService : ICategoryService
 {
     private readonly IRepositoryManager _repository;
-    private readonly IUserCategoryService _userCategoryService;
     private readonly IMapper _mapper;
-    public CategoryService(IRepositoryManager repository, IUserCategoryService userCategoryService , IMapper mapper)
+    public CategoryService(IRepositoryManager repository, IMapper mapper)
     {
         _repository = repository;
-        _userCategoryService = userCategoryService;
         _mapper = mapper;
     }
 
-    public async Task<CategoryDto> CrerateCategoryAsync(CategoryForCreationDto categoryForCreationDto, Guid userId)
-    {
+    public async Task<CategoryDto> CreateCategoryAsync(CategoryForCreationDto categoryForCreationDto, Guid userId)
+    {   
+
         var newCategory = _mapper.Map<Category>(categoryForCreationDto);
+        newCategory.Userid = userId;
+
         await _repository.CategoryRepository.CreateCategoryAsync(newCategory);
-
-        await _userCategoryService.UserCategoryAddAsync(new UserCategoryForCreationDto
-        {
-            UserId = userId.ToString(),
-            CategoryId = newCategory.Id
-        });
-
         await _repository.SaveAsync();
 
         return _mapper.Map<CategoryDto>(newCategory);
     }
+    //public async Task<IEnumerable<CategoryDto>> GetCategoriesAsync(Guid userId, CancellationToken token)
+    //{
+    //    var userCategories = 
+    //}
 }

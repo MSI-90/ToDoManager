@@ -25,7 +25,7 @@ public class CategoryController : ControllerBase
     public async Task<IActionResult> CreateCategory([FromBody] CategoryForCreationDto categoryForCreation)
     {
         var userId = _userContext.UserId;
-        var category = await _categoryService.CrerateCategoryAsync(categoryForCreation, userId);
+        var category = await _categoryService.CreateCategoryAsync(categoryForCreation, userId);
         return Ok(category);
     }
 }

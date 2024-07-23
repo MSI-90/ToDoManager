@@ -21,10 +21,6 @@ public class MappingProfile : Profile
         CreateMap<TaskItemForCreationWithCategoryDto, TaskItem>()
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow));
 
-        CreateMap<TaskItem, UserCategory>();
-
-        CreateMap<UserCategoryForCreationDto, UserCategory>();
-
         CreateMap<CategoryForCreationDto, Category>();
 
         CreateMap<Category, CategoryDto>();

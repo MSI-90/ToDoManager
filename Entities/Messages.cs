@@ -8,5 +8,5 @@ public static class Messages
     public const string RegError = "Ошибка на этапе регистрации пользователя";
     public const string InvalidAuthData = "Аутентификация не удалась. Неверный email адрес или пароль.";
     public const string WrongAccessToken = "Неверный токен";
-    public const string TaskItemNotFound = $"Нет задачи по указанным данным.";
+    public const string TaskItemNotFound = "Нет задачи по указанным данным.";
 }

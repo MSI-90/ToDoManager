@@ -21,5 +21,12 @@ public class CategoryRepository : ICategoryRepository
         await _repositoryContext.Categories.ToListAsync(token);
 
     public async Task<Category?> GetCategoryAsync(Guid id, CancellationToken token) =>
-        await _repositoryContext.Categories.Where(c => c.Id == id).FirstOrDefaultAsync(token);
+        await _repositoryContext.Categories
+        .Where(c => c.Id.Equals(id))
+        .FirstOrDefaultAsync(token);
+
+    public async Task<Category?> GetCategoryTitleAsync(Guid userId, string title, CancellationToken token) 
+        => await _repositoryContext.Categories
+        .Where(c => c.Title.Equals(title) && c.Userid.Equals(userId))
+        .FirstOrDefaultAsync(token); 
 }

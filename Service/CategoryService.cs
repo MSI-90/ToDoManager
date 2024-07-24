@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Contracts;
+using Domain.Exceptions;
 using Entities;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -16,9 +17,9 @@ public class CategoryService : ICategoryService
         _mapper = mapper;
     }
 
-    public async Task<CategoryDto> CreateCategoryAsync(CategoryForCreationDto categoryForCreationDto, Guid userId)
-    {   
-
+    public async Task<CategoryDto> CreateCategoryAsync(CategoryForCreationDto categoryForCreationDto, Guid userId, CancellationToken token)
+    {
+        await CheckCategoryTitleAsync(userId, categoryForCreationDto.Title, token);
         var newCategory = _mapper.Map<Category>(categoryForCreationDto);
         newCategory.Userid = userId;
 
@@ -27,6 +28,14 @@ public class CategoryService : ICategoryService
 
         return _mapper.Map<CategoryDto>(newCategory);
     }
+
+    public async Task CheckCategoryTitleAsync(Guid userId, string titleCategory, CancellationToken token)
+    {
+        var categoryExist = await _repository.CategoryRepository.GetCategoryTitleAsync(userId, titleCategory, token);
+        if (categoryExist is not null)
+            throw new CategoryIsAlreadyExistException($"Уже имеется категория, именуемая как {titleCategory}");
+    }
+
     //public async Task<IEnumerable<CategoryDto>> GetCategoriesAsync(Guid userId, CancellationToken token)
     //{
     //    var userCategories = 

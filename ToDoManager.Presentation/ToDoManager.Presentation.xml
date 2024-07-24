@@ -36,6 +36,20 @@
             Category controller
             </summary>
         </member>
+        <member name="M:ToDoManager.Presentation.Controllers.CategoryController.CreateCategory(Shared.DataTransferObjects.CategoryForCreationDto,System.Threading.CancellationToken)">
+            <summary>
+            Создать новую категорию для пользователя (Create new user category)
+            </summary>
+            <param name="categoryForCreation"></param>
+            <param name="token"></param>
+            <returns>
+            Возвращает созданную категорию с заголовком location (return new created category with location header)
+            </returns>
+            <response code="201">Оперция успешно выполнена (operation is successfull)</response>
+            <response code="400">Не указаны обязательные данные для заполнения (information is undefined)</response>
+            <response code="401">Пользователь не прошел процедуру аутентификации</response> 
+            <response code="422">Неверно указаны поля для заполнения (Invalid requaired information)</response>
+        </member>
         <member name="T:ToDoManager.Presentation.Controllers.TaskItemController">
             <summary>
             TaskItem controller

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestFeeatures;
 using ToDoManager.Presentation.ActionFilters;
 
 namespace ToDoManager.Presentation.Controllers;
@@ -45,15 +46,16 @@ public class CategoryController : ControllerBase
     /// Получить все категории для пользователя
     /// </summary>
     /// <param name="token"></param>
+    /// <param name="parameters"></param>
     /// <returns>Возвращает список категорий для пользователя</returns>
     /// <response code="200">Оперция успешно выполнена (operation is successfull)</response>
     /// <response code="401">Пользователь не прошел процедуру аутентификации</response> 
     [HttpGet("categories")]
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
-    public async Task<IActionResult> GetCategories(CancellationToken token)
+    public async Task<IActionResult> GetCategories([FromQuery] CategoryParameters parameters, CancellationToken token)
     {
-        var categories = await _categoryService.GetAllCategoriesAsync(_userContext.UserId, token);
+        var categories = await _categoryService.GetAllCategoriesAsync(_userContext.UserId, parameters, token);
         return Ok(categories);
     }
 

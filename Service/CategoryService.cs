@@ -4,6 +4,7 @@ using Domain.Exceptions;
 using Entities;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestFeeatures;
 
 namespace Service;
 
@@ -33,9 +34,9 @@ public class CategoryService : ICategoryService
         var category = await GetCategoryAndCheckExists(categoryId, userId, token);
         return _mapper.Map<CategoryDto>(category);
     }
-    public async Task<IEnumerable<CategoryDto>> GetAllCategoriesAsync(Guid userId, CancellationToken token)
+    public async Task<IEnumerable<CategoryDto>> GetAllCategoriesAsync(Guid userId, CategoryParameters parameters, CancellationToken token)
     {
-        var categories = await _repository.CategoryRepository.GetCategoriesAsync(userId, token);
+        var categories = await _repository.CategoryRepository.GetCategoriesAsync(userId, parameters, token);
         return _mapper.Map<IEnumerable<CategoryDto>>(categories);
     }
     public async Task DeleteCategoryAsync(Guid categoryId, Guid userId, CancellationToken token)

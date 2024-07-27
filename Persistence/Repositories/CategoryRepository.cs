@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities;
 using Microsoft.EntityFrameworkCore;
+using Shared.RequestFeeatures;
 
 namespace Persistence.Repositories;
 
@@ -17,9 +18,11 @@ public class CategoryRepository : ICategoryRepository
 
     public void DeleteCategory(Category category) => _repositoryContext.Remove(category);
 
-    public async Task<IEnumerable<Category>> GetCategoriesAsync(Guid userId, CancellationToken token) => 
+    public async Task<IEnumerable<Category>> GetCategoriesAsync(Guid userId, CategoryParameters parameters, CancellationToken token) => 
         await _repositoryContext.Categories
         .Where(c => c.Userid.Equals(userId))
+        .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+        .Take(parameters.PageSize)
         .ToListAsync(token);
 
     public async Task<Category?> GetCategoryAsync(Guid id, Guid userId, CancellationToken token) =>

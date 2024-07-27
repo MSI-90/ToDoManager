@@ -47,11 +47,12 @@
             <response code="401">Пользователь не прошел процедуру аутентификации</response> 
             <response code="404">Нет категории по идентификатору</response> 
         </member>
-        <member name="M:ToDoManager.Presentation.Controllers.CategoryController.GetCategories(System.Threading.CancellationToken)">
+        <member name="M:ToDoManager.Presentation.Controllers.CategoryController.GetCategories(Shared.RequestFeeatures.CategoryParameters,System.Threading.CancellationToken)">
             <summary>
             Получить все категории для пользователя
             </summary>
             <param name="token"></param>
+            <param name="parameters"></param>
             <returns>Возвращает список категорий для пользователя</returns>
             <response code="200">Оперция успешно выполнена (operation is successfull)</response>
             <response code="401">Пользователь не прошел процедуру аутентификации</response> 

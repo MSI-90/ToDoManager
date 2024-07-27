@@ -34,10 +34,11 @@ public class CategoryService : ICategoryService
         var category = await GetCategoryAndCheckExists(categoryId, userId, token);
         return _mapper.Map<CategoryDto>(category);
     }
-    public async Task<IEnumerable<CategoryDto>> GetAllCategoriesAsync(Guid userId, CategoryParameters parameters, CancellationToken token)
+    public async Task<(IEnumerable<CategoryDto> categories, MetaData metaData)> GetAllCategoriesAsync(Guid userId, CategoryParameters parameters, CancellationToken token)
     {
         var categories = await _repository.CategoryRepository.GetCategoriesAsync(userId, parameters, token);
-        return _mapper.Map<IEnumerable<CategoryDto>>(categories);
+        var categoriesDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
+        return (categories: categoriesDto, metaData: categories.MetaData);
     }
     public async Task DeleteCategoryAsync(Guid categoryId, Guid userId, CancellationToken token)
     {

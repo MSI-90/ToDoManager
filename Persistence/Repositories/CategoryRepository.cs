@@ -18,12 +18,15 @@ public class CategoryRepository : ICategoryRepository
 
     public void DeleteCategory(Category category) => _repositoryContext.Remove(category);
 
-    public async Task<IEnumerable<Category>> GetCategoriesAsync(Guid userId, CategoryParameters parameters, CancellationToken token) => 
-        await _repositoryContext.Categories
-        .Where(c => c.Userid.Equals(userId))
-        .Skip((parameters.PageNumber - 1) * parameters.PageSize)
-        .Take(parameters.PageSize)
-        .ToListAsync(token);
+    public async Task<PagedList<Category>> GetCategoriesAsync(Guid userId, CategoryParameters parameters, CancellationToken token)
+    {
+        var categories = await _repositoryContext.Categories
+            .OrderBy(c => c.Title)
+            .Where(c => c.Userid.Equals(userId))
+            .ToListAsync(token);
+
+        return PagedList<Category>.ToPagedList(categories, parameters.PageNumber, parameters.PageSize);
+    }
 
     public async Task<Category?> GetCategoryAsync(Guid id, Guid userId, CancellationToken token) =>
         await _repositoryContext.Categories

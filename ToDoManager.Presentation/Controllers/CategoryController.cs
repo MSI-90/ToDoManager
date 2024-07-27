@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 using Shared.RequestFeeatures;
+using System.Text.Json;
 using ToDoManager.Presentation.ActionFilters;
 
 namespace ToDoManager.Presentation.Controllers;
@@ -55,8 +58,9 @@ public class CategoryController : ControllerBase
     [ProducesResponseType(401)]
     public async Task<IActionResult> GetCategories([FromQuery] CategoryParameters parameters, CancellationToken token)
     {
-        var categories = await _categoryService.GetAllCategoriesAsync(_userContext.UserId, parameters, token);
-        return Ok(categories);
+        var categoriesResult = await _categoryService.GetAllCategoriesAsync(_userContext.UserId, parameters, token);
+        Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(categoriesResult.metaData));
+        return Ok(categoriesResult.categories);
     }
 
     /// <summary>

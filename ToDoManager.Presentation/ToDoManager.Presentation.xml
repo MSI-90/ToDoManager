@@ -36,19 +36,50 @@
             Category controller
             </summary>
         </member>
+        <member name="M:ToDoManager.Presentation.Controllers.CategoryController.GetCategory(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Получить категорию по идентификатору
+            </summary>
+            <param name="categoryId"></param>
+            <param name="token"></param>
+            <returns> Возвращает задачу </returns>
+            <response code="200">Оперция успешно выполнена (operation is successfull)</response>
+            <response code="401">Пользователь не прошел процедуру аутентификации</response> 
+            <response code="404">Нет категории по идентификатору</response> 
+        </member>
+        <member name="M:ToDoManager.Presentation.Controllers.CategoryController.GetCategories(System.Threading.CancellationToken)">
+            <summary>
+            Получить все категории для пользователя
+            </summary>
+            <param name="token"></param>
+            <returns>Возвращает список категорий для пользователя</returns>
+            <response code="200">Оперция успешно выполнена (operation is successfull)</response>
+            <response code="401">Пользователь не прошел процедуру аутентификации</response> 
+        </member>
         <member name="M:ToDoManager.Presentation.Controllers.CategoryController.CreateCategory(Shared.DataTransferObjects.CategoryForCreationDto,System.Threading.CancellationToken)">
             <summary>
-            Создать новую категорию для пользователя (Create new user category)
+            Создать новую категорию для пользователя
             </summary>
             <param name="categoryForCreation"></param>
             <param name="token"></param>
             <returns>
             Возвращает созданную категорию с заголовком location (return new created category with location header)
             </returns>
-            <response code="201">Оперция успешно выполнена (operation is successfull)</response>
+            <response code="201">Оперция успешно выполнена, категория создана (operation is successfull)</response>
             <response code="400">Не указаны обязательные данные для заполнения (information is undefined)</response>
             <response code="401">Пользователь не прошел процедуру аутентификации</response> 
             <response code="422">Неверно указаны поля для заполнения (Invalid requaired information)</response>
+        </member>
+        <member name="M:ToDoManager.Presentation.Controllers.CategoryController.DeleteCategory(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Удалить категорию
+            </summary>
+            <param name="categoryId"></param>
+            <param name="token"></param>
+            <returns>Удаляет категорию для пользователя</returns>
+            <response code="204">Оперция успешно выполнена, категория удалена (operation is successfull, category was removed)</response>
+            <response code="401">Пользователь не прошел процедуру аутентификации</response>
+            <response code="404">Нет категории по данному критерию</response>
         </member>
         <member name="T:ToDoManager.Presentation.Controllers.TaskItemController">
             <summary>

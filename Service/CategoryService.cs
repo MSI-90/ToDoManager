@@ -28,7 +28,22 @@ public class CategoryService : ICategoryService
 
         return _mapper.Map<CategoryDto>(newCategory);
     }
-
+    public async Task<CategoryDto> GetCategoryAsync(Guid categoryId, Guid userId, CancellationToken token)
+    {
+        var category = await GetCategoryAndCheckExists(categoryId, userId, token);
+        return _mapper.Map<CategoryDto>(category);
+    }
+    public async Task<IEnumerable<CategoryDto>> GetAllCategoriesAsync(Guid userId, CancellationToken token)
+    {
+        var categories = await _repository.CategoryRepository.GetCategoriesAsync(userId, token);
+        return _mapper.Map<IEnumerable<CategoryDto>>(categories);
+    }
+    public async Task DeleteCategoryAsync(Guid categoryId, Guid userId, CancellationToken token)
+    {
+        var category = await GetCategoryAndCheckExists(categoryId, userId, token);
+        _repository.CategoryRepository.DeleteCategory(category);
+        await _repository.SaveAsync();
+    }
     public async Task CheckCategoryTitleAsync(Guid userId, string titleCategory, CancellationToken token)
     {
         var categoryExist = await _repository.CategoryRepository.GetCategoryTitleAsync(userId, titleCategory, token);
@@ -36,8 +51,12 @@ public class CategoryService : ICategoryService
             throw new CategoryIsAlreadyExistException($"Уже имеется категория, именуемая как {titleCategory}");
     }
 
-    //public async Task<IEnumerable<CategoryDto>> GetCategoriesAsync(Guid userId, CancellationToken token)
-    //{
-    //    var userCategories = 
-    //}
+    private async Task<Category> GetCategoryAndCheckExists(Guid categoryId, Guid userId, CancellationToken token)
+    {
+        var category = await _repository.CategoryRepository.GetCategoryAsync(categoryId, userId, token);
+        if (category is null)
+            throw new CategoryNotFoundException();
+
+        return category;
+    }
 }

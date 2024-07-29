@@ -2,4 +2,5 @@
 
 public class TaskItemParameters : RequestParameters
 {
+    public bool IsCancelled { get; set; }
 }

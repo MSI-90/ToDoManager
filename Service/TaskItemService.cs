@@ -18,10 +18,11 @@ public class TaskItemService : ITaskItemService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<TaskItemDto>> GetTaskItemsAsync(Guid userId, TaskItemParameters parameters, CancellationToken token)
+    public async Task<(IEnumerable<TaskItemDto> taskItems, MetaData metaData)> GetTaskItemsAsync(Guid userId, TaskItemParameters parameters, CancellationToken token)
     {
         var itemsFromRepository = await _repository.TaskItemRepository.GetTaskItemsAsync(userId, parameters, token);
-        return _mapper.Map<IEnumerable<TaskItemDto>>(itemsFromRepository);
+        var itemsDto = _mapper.Map<IEnumerable<TaskItemDto>>(itemsFromRepository);
+        return (taskItems: itemsDto, metaData: itemsFromRepository.MetaData);
     }
     public async Task<TaskItemDto> GetTaskItemAsync(Guid userId, Guid taskId, CancellationToken token)
     {

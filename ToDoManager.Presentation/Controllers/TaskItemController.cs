@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 using Shared.RequestFeeatures;
+using System.Text.Json;
 using ToDoManager.Presentation.ActionFilters;
 namespace ToDoManager.Presentation.Controllers;
 
@@ -38,7 +40,8 @@ public class TaskItemController : ControllerBase
     {
         var userId = _userContext.UserId;
         var result = await _taskItemService.GetTaskItemsAsync(userId, parameters, token);
-        return Ok(result);
+        Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(result.metaData));
+        return Ok(result.taskItems);
     }
 
     /// <summary>

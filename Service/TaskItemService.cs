@@ -12,10 +12,12 @@ public class TaskItemService : ITaskItemService
 {
     private readonly IRepositoryManager _repository;
     private readonly IMapper _mapper;
+    private readonly ICategoryService _categoryService;
     public TaskItemService(IRepositoryManager repository, IMapper mapper, ICategoryService categoryService)
     {
         _repository = repository;
         _mapper = mapper;
+        _categoryService = categoryService;
     }
 
     public async Task<(IEnumerable<TaskItemDto> taskItems, MetaData metaData)> GetTaskItemsAsync(Guid userId, TaskItemParameters parameters, CancellationToken token)
@@ -36,13 +38,14 @@ public class TaskItemService : ITaskItemService
         await _repository.TaskItemRepository.CreateTaskItemAsync(taskItemEntity);
         await _repository.SaveAsync();
 
-        return _mapper.Map<TaskItemDto>(taskItemEntity); ;
+        return _mapper.Map<TaskItemDto>(taskItemEntity);
     }
     public async Task<TaskItemWithCategoryDto> CreateTaskItemWithCategoryAsync(TaskItemForCreationWithCategoryDto taskItemFroCreation, Guid userId)
     {
         var taskItemEntity = _mapper.Map<TaskItem>(taskItemFroCreation);
         taskItemEntity.UserId = userId;
         await _repository.TaskItemRepository.CreateTaskItemAsync(taskItemEntity);
+        taskItemEntity.Category!.Userid = userId;
         await _repository.SaveAsync();
         
         return _mapper.Map<TaskItemWithCategoryDto>(taskItemEntity);

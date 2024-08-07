@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Shared.DataTransferObjects;
 
-public class CategoryForManipulationDto
+public record CategoryForManipulationDto
 {
     [Required]
     [MinLength(5, ErrorMessage = "Минимальное число символов для наименования категории - 5.")]

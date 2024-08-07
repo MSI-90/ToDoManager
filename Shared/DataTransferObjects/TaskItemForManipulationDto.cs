@@ -16,4 +16,5 @@ public record TaskItemForManipulationDto
 
     [Required]
     public DateTime ExpirationDate { get; init; }
+    public CategoryForCreationDto? Category { get; init; }
 }

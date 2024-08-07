@@ -1,5 +1,5 @@
 ﻿namespace Shared.DataTransferObjects;
 
-public class CategoryForCreationDto : CategoryForManipulationDto
+public record CategoryForCreationDto : CategoryForManipulationDto
 {
 }

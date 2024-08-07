@@ -5,6 +5,7 @@ using Entities;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 using Shared.RequestFeeatures;
+using System.Runtime.CompilerServices;
 
 namespace Service;
 
@@ -28,41 +29,56 @@ public class TaskItemService : ITaskItemService
     }
     public async Task<TaskItemDto> GetTaskItemAsync(Guid userId, Guid taskId, CancellationToken token)
     {
-        var taskItemFromRepository = await CheckTaskItemExist(userId, taskId, token);
+        var taskItemFromRepository = await CheckTaskItemExistAsync(userId, taskId, token);
         return _mapper.Map<TaskItemDto>(taskItemFromRepository);
     }
-    public async Task<TaskItemDto> CreateTaskItemAsync(TaskItemForCreationDto taskItemFroCreation, Guid userId)
+    public async Task<TaskItemDto> CreateTaskItemAsync(TaskItemForCreationDto taskItemFroCreation, Guid userId, CancellationToken token)
     {
         var taskItemEntity = _mapper.Map<TaskItem>(taskItemFroCreation);
-        taskItemEntity.UserId = userId;
-        await _repository.TaskItemRepository.CreateTaskItemAsync(taskItemEntity);
-        await _repository.SaveAsync();
 
-        return _mapper.Map<TaskItemDto>(taskItemEntity);
-    }
-    public async Task<TaskItemWithCategoryDto> CreateTaskItemWithCategoryAsync(TaskItemForCreationWithCategoryDto taskItemFroCreation, Guid userId)
-    {
-        var taskItemEntity = _mapper.Map<TaskItem>(taskItemFroCreation);
-        taskItemEntity.UserId = userId;
-        await _repository.TaskItemRepository.CreateTaskItemAsync(taskItemEntity);
-        taskItemEntity.Category!.Userid = userId;
-        await _repository.SaveAsync();
+        if (taskItemFroCreation.Category is null)
+        {
+            taskItemEntity.UserId = userId;
+            await _repository.TaskItemRepository.CreateTaskItemAsync(taskItemEntity);
+            await _repository.SaveAsync();
+            return await CreateNewTaskItemAndSaveAsync(taskItemEntity);
+        }
         
-        return _mapper.Map<TaskItemWithCategoryDto>(taskItemEntity);
+        await CheckCategoryExistAsync(userId, taskItemFroCreation.Category.Title, token);
+        taskItemEntity.UserId = userId;
+        taskItemEntity.Category!.Userid = userId;
+        return await CreateNewTaskItemAndSaveAsync(taskItemEntity);
+    }
+    private async Task<TaskItemDto> CreateNewTaskItemAndSaveAsync(TaskItem taskItemEntity)
+    {
+        await _repository.TaskItemRepository.CreateTaskItemAsync(taskItemEntity);
+        await _repository.SaveAsync();
+        return _mapper.Map<TaskItemDto>(taskItemEntity);
     }
     public async Task DeleteTaskItemAsync(Guid userId, Guid taskItemId, CancellationToken token)
     {
-        var taskItem = await CheckTaskItemExist(userId, taskItemId, token);
+        var taskItem = await CheckTaskItemExistAsync(userId, taskItemId, token);
         var taskItemForDelete = _mapper.Map<TaskItem>(taskItem);
         _repository.TaskItemRepository.DeleteTaskItem(taskItemForDelete);
         await _repository.SaveAsync();
     }
-    private async Task<TaskItem> CheckTaskItemExist(Guid userId, Guid taskId, CancellationToken token)
+    private async Task<TaskItem> CheckTaskItemExistAsync(Guid userId, Guid taskId, CancellationToken token)
     {
         var taskItemFromRepository = await _repository.TaskItemRepository.GetTaskItemAsync(userId, taskId, token);
         if (taskItemFromRepository is null)
             throw new TaskItemNotFoundException();
 
         return taskItemFromRepository;
+    }
+    public async Task UpdatTaskItemAsync(TaskItemForUpdateDto taskItemForUpdate, Guid userId, Guid taskId, CancellationToken token)
+    {
+        var taskItem = await CheckTaskItemExistAsync(userId, taskId, token);
+        await CheckCategoryExistAsync(userId, taskItemForUpdate.Category.Title, token);
+        _mapper.Map(taskItemForUpdate, taskItem);
+        await _repository.SaveAsync();
+    }
+    private async Task CheckCategoryExistAsync(Guid userId, string categoryTitle, CancellationToken token)
+    {
+        await _categoryService.CheckCategoryTitleAsync(userId, categoryTitle, token);
     }
 }

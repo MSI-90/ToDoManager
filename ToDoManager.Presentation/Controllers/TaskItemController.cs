@@ -68,6 +68,7 @@ public class TaskItemController : ControllerBase
     /// Создать новую задачу для пользователя
     /// </summary>
     /// <param name="taskItemForCreation"></param>
+    /// <param name="token"></param>
     /// <returns>Возвращает только-что созданную задачу</returns>
     /// <response code="201">Оперция успешно выполнена</response>
     /// <response code="400">Не указаны обязательные данные для заполнения (information is undefined)</response>
@@ -79,32 +80,10 @@ public class TaskItemController : ControllerBase
     [ProducesResponseType(401)]
     [ProducesResponseType(422)]
     [ServiceFilter(typeof(ValidationFilter))]
-    public async Task<IActionResult> CreateTakItem([FromBody] TaskItemForCreationDto taskItemForCreation)
+    public async Task<IActionResult> CreateTakItem([FromBody] TaskItemForCreationDto taskItemForCreation, CancellationToken token)
     {
         var userId = _userContext.UserId;
-        var result = await _taskItemService.CreateTaskItemAsync(taskItemForCreation, userId);
-        return CreatedAtRoute("GetTaskItemById", new { taskItemId = result.Id }, result);
-    }
-
-    /// <summary>
-    /// Создать новую задачу с категорией
-    /// </summary>
-    /// <param name="taskItemWithCategoryForCreation"></param>
-    /// <returns>Возвращает только-что созданную задачу</returns>
-    /// <response code="201">Оперция успешно выполнена</response>
-    /// <response code="400">Не указаны обязательные данные для заполнения (information is undefined)</response>
-    /// <response code="401">Пользователь не прошел процедуру аутентификации</response> 
-    /// <response code="422">Неверно указаны поля для заполнения (Invalid requaired information)</response>
-    [HttpPost("createtaskwithcategory", Name = "CreateNewTaskWithCategory")]
-    [ProducesResponseType(201)]
-    [ProducesResponseType(400)]
-    [ProducesResponseType(401)]
-    [ProducesResponseType(422)]
-    [ServiceFilter(typeof(ValidationFilter))]
-    public async Task<IActionResult> CreateTakItemWithCategory([FromBody] TaskItemForCreationWithCategoryDto taskItemWithCategoryForCreation)
-    {
-        var userId = _userContext.UserId;
-        var result = await _taskItemService.CreateTaskItemWithCategoryAsync(taskItemWithCategoryForCreation, userId);
+        var result = await _taskItemService.CreateTaskItemAsync(taskItemForCreation, userId, token);
         return CreatedAtRoute("GetTaskItemById", new { taskItemId = result.Id }, result);
     }
 
@@ -125,6 +104,15 @@ public class TaskItemController : ControllerBase
     {
         var userId = _userContext.UserId;
         await _taskItemService.DeleteTaskItemAsync(userId, taskItemId, token);
+        return NoContent();
+    }
+
+    [HttpPut("{taskItemId:guid}", Name = "UpdateTaskItem")]
+    [ServiceFilter(typeof(ValidationFilter))]
+    public async Task<IActionResult> UpdateTaskItem([FromBody] TaskItemForUpdateDto taskItemForUpdateDto, Guid taskItemId, CancellationToken token)
+    {
+        var userId = _userContext.UserId;
+        await _taskItemService.UpdatTaskItemAsync(taskItemForUpdateDto, userId, taskItemId, token);
         return NoContent();
     }
 }

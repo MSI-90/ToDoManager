@@ -17,7 +17,6 @@ public class CategoryService : ICategoryService
         _repository = repository;
         _mapper = mapper;
     }
-
     public async Task<CategoryDto> CreateCategoryAsync(CategoryForCreationDto categoryForCreationDto, Guid userId, CancellationToken token)
     {
         await CheckCategoryTitleAsync(userId, categoryForCreationDto.Title, token);
@@ -39,6 +38,13 @@ public class CategoryService : ICategoryService
         var categories = await _repository.CategoryRepository.GetCategoriesAsync(userId, parameters, token);
         var categoriesDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
         return (categories: categoriesDto, metaData: categories.MetaData);
+    }
+    public async Task UpdateCategoryAsync(CategoryForUpdateDto categoryForUpdate, Guid categoryId, Guid userId, CancellationToken token)
+    {
+        var categoryOnUpdate = await GetCategoryAndCheckExists(categoryId, userId, token);
+        await CheckCategoryTitleAsync(userId, categoryForUpdate.Title, token);
+        _mapper.Map(categoryForUpdate, categoryOnUpdate);
+        await _repository.SaveAsync();
     }
     public async Task DeleteCategoryAsync(Guid categoryId, Guid userId, CancellationToken token)
     {

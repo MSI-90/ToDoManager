@@ -88,6 +88,28 @@ public class CategoryController : ControllerBase
     }
 
     /// <summary>
+    /// Обновить категорию по идентификатору
+    /// </summary>
+    /// <param name="categoryForUpdate"></param>
+    /// <param name="categoryId"></param>
+    /// <param name="token"></param>
+    /// <response code="204">Оперция успешно выполнена, категория изменена (operation is successfull)</response>
+    /// <response code="400">Не указаны обязательные данные для заполнения (information is undefined)</response>
+    /// <response code="401">Пользователь не прошел процедуру аутентификации</response> 
+    /// <response code="422">Неверно указаны поля для заполнения (Invalid requaired information)</response>
+    [HttpPut]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(422)]
+    [ServiceFilter(typeof(ValidationFilter))]
+    public async Task<IActionResult> UpdateCategory([FromBody] CategoryForUpdateDto categoryForUpdate, Guid categoryId, CancellationToken token)
+    {
+        await _categoryService.UpdateCategoryAsync(categoryForUpdate, categoryId, _userContext.UserId, token);
+        return NoContent();
+    }
+
+    /// <summary>
     /// Удалить категорию
     /// </summary>
     /// <param name="categoryId"></param>

@@ -81,7 +81,7 @@ public sealed class AuthenticationService : IAuthenticationService
 
         await _userManager.UpdateAsync(_user);
 
-        return new TokenDto(accessToken, refreshToken);
+        return new TokenDto(accessToken, refreshToken, Convert.ToDouble(_configuration["JwtSettings:Expires"]));
     }
     private SigningCredentials GetSigningCredentials()
     {

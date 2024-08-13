@@ -34,6 +34,7 @@ public class TaskItemController : ControllerBase
     /// <response code="200">Оперция успешно выполнена</response>
     /// <response code="401">Пользователь не прошел процедуру аутентификации</response>
     [HttpGet(Name = "GetTasItems")]
+    [HttpHead]
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     public async Task<IActionResult> GetTaskItems([FromQuery] TaskItemParameters parameters, CancellationToken token)

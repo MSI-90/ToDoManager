@@ -68,7 +68,6 @@ public class AuthenticationController : ControllerBase
     public async Task<IActionResult> Authentication([FromBody] UserForAutheticationDto userForAuthetication)
     {
         await _authenticationService.ValidUserAsync(userForAuthetication);
-
         var tokenDto = await _authenticationService.CreateTokenAsync(populateExp: true);
 
         return Ok(tokenDto);
